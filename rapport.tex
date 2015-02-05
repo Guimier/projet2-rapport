@@ -17,8 +17,18 @@
 
 \newcommand{\sectionSpeciale}[1]{\section*{#1}\addcontentsline{toc}{section}{#1}}
 \newcommand{\sectionCachee}[1]{\addcontentsline{toc}{section}{#1}}
-\newcommand{\annexe}[1]{\addcontentsline{ann}{section}{#1}}
 
+%%%%%%%%%%%%%%%%%%%% Gestion des annexes %%%%%%%%%%
+\makeatletter
+
+	\newcommand{\annexe}[1]{\addcontentsline{ann}{section}{#1}}
+	\newcommand\toann{\sectionSpeciale{Annexes}\@starttoc{ann}}
+      \newwrite\tf@ann
+      \immediate\openout\tf@ann\jobname.ann\relax
+      
+\makeatother
+
+%%%%%%%%%%%%%%%%%%%% Début du document %%%%%%%%%%%%%%%%%%%%
 \begin{document}
 
 \renewcommand{\contentsname}{Table des matières}
@@ -167,11 +177,9 @@ Ceci est une introduction
 
 %%%%%%%%%% Annexes %%%%%%%%%%
 
-\sectionSpeciale{Annexes}
+\toann
 
 \annexe{Une annexe}
-
-% TODO %
 
 %%%%%%%%%%%%%%%%%%%% Fin %%%%%%%%%%%%%%%%%%%%
 
