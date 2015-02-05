@@ -1,0 +1,178 @@
+\documentclass[a4paper, oneside, 12pt]{article}
+
+% Paquets pour le Français
+\usepackage[utf8]{inputenc} % Gestion encodages
+\usepackage[T1]{fontenc} % ???
+\usepackage[francais]{babel} % Typographie française
+
+% Images
+\usepackage{graphicx}
+
+% Mise en page
+\usepackage[top=2cm, bottom=2cm, left=2cm, right=2cm]{geometry}
+\usepackage{appendix}
+% Outils de mise en page
+\usepackage{layout}
+\usepackage{lipsum}
+
+\newcommand{\sectionSpeciale}[1]{\section*{#1}\addcontentsline{toc}{section}{#1}}
+\newcommand{\sectionCachee}[1]{\addcontentsline{toc}{section}{#1}}
+\newcommand{\annexe}[1]{\addcontentsline{ann}{section}{#1}}
+
+\begin{document}
+
+\renewcommand{\contentsname}{Table des matières}
+\renewcommand{\listfigurename}{Table des illustrations}
+\renewcommand{\figurename}{{\sc Illustration}}
+
+%%%%%%%%%%%%%%%%%%%% Page de garde %%%%%%%%%%%%%%%%%%%%
+
+	% Pas de numéro sur cette page
+	\thispagestyle{empty}
+
+	% Note : logo disponibles sur http://fc.isima.fr/~brunot/files/isima/logos/
+	% J’avais trouvé une version vectorielle, ce serait mieux, mais je ne la trouve plus…
+	\includegraphics[width=6cm]{isima.png}
+	
+	\vspace{0.5cm}
+	
+	\begin{minipage}{4cm}
+	\begin{flushleft}
+		Institut Supérieur d’informatique, de Modélisation et de leurs Applications
+		
+		\vspace{0.5cm}
+		
+		\small{ Campus des Cézeaux \\ 24 rue des Landais \\ BP 10125 \\ 63173 Aubière CEDEX }
+	\end{flushleft}
+	\end{minipage}
+	
+	\vspace{4cm}
+
+	\begin{center}
+		Rapport d’ingénieur \\
+		Projet de 2{\ieme} année \\
+		Filière {\em{Réseaux et télécommunications}} \\
+		\Large{Facturation d’appels sur un serveur Kamailio/Radius}
+	\end{center}
+	
+	\vspace{4cm}
+	
+	% TODO %
+
+\newpage
+	
+%%%%%%%%%%%%%%%%%%%% Précontenu %%%%%%%%%%%%%%%%%%%%
+
+\pagenumbering{roman}
+
+%%%%%%%%%% Remerciements %%%%%%%%%%
+
+\sectionSpeciale{Remerciements}
+
+\newpage
+
+%%%%%%%%%% Table des illustrations %%%%%%%%%%
+
+\sectionCachee{\listfigurename}
+
+\listoffigures
+
+\newpage
+
+%%%%%%%%%% Résumé/Abstract %%%%%%%%%%
+
+\sectionSpeciale{Résumé}
+
+\vspace{10cm}
+
+\sectionSpeciale{Abstract}
+
+\newpage
+
+%%%%%%%%%% Table des matiètes %%%%%%%%%%
+
+\sectionCachee{\contentsname}
+
+\tableofcontents
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%% Contenu %%%%%%%%%%%%%%%%%%%%
+
+% Sauvegarde du numéro de la page courante
+\newcounter{metapage}
+\setcounter{metapage}{\value{page}}
+% Remise à zéro des numéros de page & changement de chiffres
+\pagenumbering{arabic}
+
+%%%%%%%%%% Introduction %%%%%%%%%%
+
+\sectionSpeciale{Introduction}
+
+Ceci est une introduction
+
+\newpage
+
+%%%%%%%%%% Partie I %%%%%%%%%%
+
+\section{Première partie}
+
+\subsection{Première sous-partie}
+
+\lipsum[2]
+
+\subsection{Seconde sous-partie}
+
+\lipsum[4]
+
+\newpage
+
+%%%%%%%%%% Partie II %%%%%%%%%%
+
+\section{Seconde partie}
+
+\begin{figure}[h]
+	\lipsum[1]
+	\caption{Une figure}
+\end{figure}
+
+\subsection{Troisième sous-partie}
+
+\lipsum[3]
+
+\subsection{Quatrième sous-partie}
+
+\lipsum[3]
+
+\newpage
+
+%%%%%%%%%% Conclusion %%%%%%%%%%
+
+\sectionSpeciale{Conclusion}
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%% Postcontenu %%%%%%%%%%%%%%%%%%%%
+
+% Changement des chiffres utilisés pour les numéros de pages
+\pagenumbering{roman}
+% Rétablissement du numéro de page méta
+\setcounter{page}{\value{metapage}}
+
+%%%%%%%%%% Références bibliographiques %%%%%%%%%%
+
+\sectionSpeciale{Références bibliographiques}
+
+\newpage
+
+%%%%%%%%%% Annexes %%%%%%%%%%
+
+\sectionSpeciale{Annexes}
+
+\annexe{Une annexe}
+
+% TODO %
+
+%%%%%%%%%%%%%%%%%%%% Fin %%%%%%%%%%%%%%%%%%%%
+
+\end{document}
