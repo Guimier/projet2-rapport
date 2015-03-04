@@ -1,1 +1,32 @@
-\todo
+\section{Installation}
+\subsection{Installation de la machine}
+Dans le cadre de notre projet nous avons dû installer des machines Linux. Nous avons donc choisi d'installer deux Debian \todo
+Ces deux machines devaient nous permettre de monter des serveurs de téléphonie SIP.
+C'est pourquoi, nous avons installé un proxy SIP nommé \kam, ainsi qu'un serveur d'authentification \frad.
+\subsection{Installation de \kam.}
+Ensuite, nous avons installé \kam.
+Pour cela, nous avons commencé par installer les paquets suivants :
+\begin{itemize}
+	\item{gcc}
+	\item{bison}
+	\item{libmysqlclient-dev}
+	\item{libradiusclient-ng-dev}
+	\item{mysql-server}
+	\item{mysql-client}
+	\item{make}
+\end{itemize}
+Ensuite, il a fallu télécharger les sources de \kam. Pour notre projet, nous avons choisi la version 4.2.2.
+Pour cela, nous avons utilisé la commande :
+
+\bash{wget "lien du téléchargement"}
+
+Il a alors fallu extraire les fichiers de l'archive grâce à la commande tar fvx.
+Puis nous sommes allés dans le dossier ainsi créé, pour notre part kamailio-4.2.2 et nous avons fait :
+
+\bash{make cfg}
+
+Ensuite, nous sommes allé modifier le fichier module.lst, qui liste les modules exclus.
+Nous avons sorti de cette liste, tous les modules de mysql et radius.
+Puis nous avons fait : 
+	
+\bash{make all}
