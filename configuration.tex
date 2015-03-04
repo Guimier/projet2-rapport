@@ -1,0 +1,59 @@
+\documentclass[a4paper, oneside, 12pt]{article}
+
+%%%%%%%%%% Paquets %%%%%%%%%%
+
+% Paquets pour le Français
+\usepackage[utf8]{inputenc} % Gestion encodages
+\usepackage[T1]{fontenc} % ???
+\usepackage[francais]{babel} % Typographie française
+
+% Images
+\usepackage{graphicx}
+
+% Mise en page
+\usepackage[top=2.5cm, bottom=7.5cm, left=2.5cm, right=2.5cm]{geometry}
+
+% Outils pour l’écriture
+\usepackage{xcolor} % Utilisé pour les hiddeux \todo
+\usepackage{layout} % Pour voir les commandes utiles
+
+%%%%%%%%%% Commandes supplémentaires %%%%%%%%%%%
+
+% Marquage du travail restant
+% [#1] Texte à afficher
+\newcommand{\todo}[1][Il y a là encore des choses à écrire !]{\colorbox{yellow}{#1}}
+
+%%% Gestion du sommaire
+% Section non numérotée
+% {#1} Nom de la section
+\newcommand{\sectionSpeciale}[1]{\section*{#1}\addcontentsline{toc}{section}{#1}}
+% Section non numérotée dont le titre n’est pas affiché.
+% {#1} Nom de la section
+\newcommand{\sectionCachee}[1]{\addcontentsline{toc}{section}{#1}}
+
+%%% Gestion des annexes
+\makeatletter
+	
+	% Définir une annexe
+	% {#1} Nom de l’annexe
+	\newcommand{\annexe}[1]{\newpage\addcontentsline{ann}{section}{#1}\section*{#1}}
+	% Lister les annexes
+	% Note : ce serait quand même bien de le faire fonctionner sans avoir besoin du makefile.
+	\newcommand\listeannexes{\sectionSpeciale{Annexes}\input{annexes.tex}}
+	
+	% Déclaration et ouverture du fichier de stockage de la liste des annexes
+	\newwrite\tf@ann
+	\immediate\openout\tf@ann\jobname.ann\relax
+      
+\makeatother
+
+% Afficher des commandes shell.
+\newenvironment{shell}{\todo[Début shell]\\}{\\\todo[Fin shell]}
+
+%%%%%%%%%% Abréviations %%%%%%%%%%
+% Le contenu suffit comme documentation…
+
+\newcommand\my{MySQL}
+\newcommand\kam{Kamailio}
+\newcommand\rad{RADIUS}
+\newcommand\frad{FreeRADIUS}
