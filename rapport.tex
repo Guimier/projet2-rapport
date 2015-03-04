@@ -11,18 +11,21 @@
 % Mise en page
 \usepackage[top=2cm, bottom=2cm, left=2cm, right=2cm]{geometry}
 \usepackage{appendix}
-% Outils de mise en page
+% Outils pour l’écriture
+\usepackage{xcolor}
 \usepackage{layout}
 \usepackage{lipsum}
+
+\newcommand{\todo}[1][Il y a là encore des choses à écrire !]{\colorbox{yellow}{#1}\\}
 
 \newcommand{\sectionSpeciale}[1]{\section*{#1}\addcontentsline{toc}{section}{#1}}
 \newcommand{\sectionCachee}[1]{\addcontentsline{toc}{section}{#1}}
 
-%%%%%%%%%%%%%%%%%%%% Gestion des annexes %%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%% Gestion des annexes %%%%%%%%%%%%%%%%%%%%
 \makeatletter
 
-	\newcommand{\annexe}[1]{\addcontentsline{ann}{section}{#1}}
-	\newcommand\toann{\sectionSpeciale{Annexes}\@starttoc{ann}}
+	\newcommand{\annexe}[1]{\addcontentsline{ann}{section}{#1}\newpage\section*{#1}}
+	\newcommand\toann{\sectionSpeciale{Annexes}\input{annexes.tex}}
       \newwrite\tf@ann
       \immediate\openout\tf@ann\jobname.ann\relax
       
@@ -123,36 +126,8 @@ Ceci est une introduction
 
 \newpage
 
-%%%%%%%%%% Partie I %%%%%%%%%%
-
-\section{Première partie}
-
-\subsection{Première sous-partie}
-
-\lipsum[2]
-
-\subsection{Seconde sous-partie}
-
-\lipsum[4]
-
-\newpage
-
-%%%%%%%%%% Partie II %%%%%%%%%%
-
-\section{Seconde partie}
-
-\begin{figure}[h]
-	\lipsum[1]
-	\caption{Une figure}
-\end{figure}
-
-\subsection{Troisième sous-partie}
-
-\lipsum[3]
-
-\subsection{Quatrième sous-partie}
-
-\lipsum[3]
+% On verra le placement plus tard…
+\input{installation.tex}
 
 \newpage
 
@@ -180,6 +155,8 @@ Ceci est une introduction
 \toann
 
 \annexe{Une annexe}
+\annexe{Une autre annexe}
+\annexe{Encore une annexe}
 
 %%%%%%%%%%%%%%%%%%%% Fin %%%%%%%%%%%%%%%%%%%%
 
