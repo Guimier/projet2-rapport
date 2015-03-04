@@ -1,32 +1,51 @@
 \section{Installation}
-\subsection{Installation de la machine}
-Dans le cadre de notre projet nous avons dû installer des machines Linux. Nous avons donc choisi d'installer deux Debian \todo
-Ces deux machines devaient nous permettre de monter des serveurs de téléphonie SIP.
-C'est pourquoi, nous avons installé un proxy SIP nommé \kam, ainsi qu'un serveur d'authentification \frad.
-\subsection{Installation de \kam.}
-Ensuite, nous avons installé \kam.
-Pour cela, nous avons commencé par installer les paquets suivants :
-\begin{itemize}
-	\item{gcc}
-	\item{bison}
-	\item{libmysqlclient-dev}
-	\item{libradiusclient-ng-dev}
-	\item{mysql-server}
-	\item{mysql-client}
-	\item{make}
-\end{itemize}
-Ensuite, il a fallu télécharger les sources de \kam. Pour notre projet, nous avons choisi la version 4.2.2.
-Pour cela, nous avons utilisé la commande :
 
-\bash{wget "lien du téléchargement"}
+\subsection{Installation du système}
 
-Il a alors fallu extraire les fichiers de l'archive grâce à la commande tar fvx.
-Puis nous sommes allés dans le dossier ainsi créé, pour notre part kamailio-4.2.2 et nous avons fait :
+\todo[Trouver la version de Debian]
 
-\bash{make cfg}
+La première étape de notre projet consistait en l’installation de serveurs de téléphonie SIP. Nous en avons installé deux, fontionnant avec le système d’exploitation Debian. Conformément à notre cahier des charges, nous y avons installé un proxy SIP, {\kam}, attaché à un serveur d’authentification {\rad}, {\frad}.
 
-Ensuite, nous sommes allé modifier le fichier module.lst, qui liste les modules exclus.
-Nous avons sorti de cette liste, tous les modules de mysql et radius.
-Puis nous avons fait : 
+\subsection{Installation de {\kam}}
+
+	Pour installer {\kam}, il nous a fallu commencer par installer les dépendances qui n’étaient pas encore présentes dans le système, disponibles dans les paquets :
 	
-\bash{make all}
+\begin{itemize}
+	\item{gcc} ;
+	\item{bison} ;
+	\item{libmysqlclient-dev} ;
+	\item{libradiusclient-ng-dev} ;
+	\item{mysql-server} ;
+	\item{mysql-client} ;
+	\item{make}.
+\end{itemize}
+
+Nous avions initialement envisagé d’utiliser ensuite les paquets Debian disponibles sur les serveurs de {\kam}, mais le paquet de base n’est pas compilé avec le support de {\rad}, rendant le paquet des bibliothèques d’authentification {\rad} inopérant.
+
+Nous avons donc téléchargé et décompressé les sources de {\kam} pour les compiler. Nous avons choisi d’utiliser la dernière version disponible, qui était la version 4.2.2. Pour cela, nous avons utilisé les commandes :
+
+\begin{shell}
+wget http://www.kamailio.org/pub/kamailio/4.2.2/src/kamailio-4.2.2\_src.tar.gz
+tar xvf kamailio-4.2.2\_src.tar.gz
+\end{shell}
+
+Puis nous sommes allés dans le dossier ainsi créé, pour notre part kamailio-4.2.2 et nous avons exécuté :
+
+\begin{shell}
+make cfg
+\end{shell}
+
+Cette commande construit la configuration par défaut pour la compilation, qu’il a fallu adapter à nos besoins. Conformément aux indications du rapport de l’année dernière, nous avons effectué les modifications suivantes :
+
+\begin{itemize}
+	\item{dans la liste de modules exclus du fichier \texttt{module.lst}, nous avons retiré les noms des modules concernant {\my} et {\rad}}.
+\end{itemize}
+
+Nuos avons ensuite compilé et installé {\kam} :
+	
+\begin{shell}
+make all
+make install
+\end{shell}
+
+Cette dernière commande installe {\kam} dans \texttt{/usr/local}.

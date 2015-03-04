@@ -16,7 +16,7 @@
 \usepackage{layout}
 \usepackage{lipsum}
 
-\newcommand{\todo}[1][Il y a là encore des choses à écrire !]{\colorbox{yellow}{#1}\\}
+\newcommand{\todo}[1][Il y a là encore des choses à écrire !]{\colorbox{yellow}{#1}}
 
 \newcommand{\sectionSpeciale}[1]{\section*{#1}\addcontentsline{toc}{section}{#1}}
 \newcommand{\sectionCachee}[1]{\addcontentsline{toc}{section}{#1}}
@@ -34,9 +34,11 @@
 %%%%%%%%%%%%%%%%%%%% Abréviations %%%%%%%%%%%%%%%%%%%%
 
 % TODO
-\newcommand\bash[1]{\texttt{#1}}
+\newenvironment{shell}{\colorbox{yellow}{Début shell}\\}{\\\colorbox{yellow}{Fin shell}}
 
+\newcommand\my{MySQL}
 \newcommand\kam{Kamailio}
+\newcommand\rad{RADIUS}
 \newcommand\frad{FreeRADIUS}
 
 %%%%%%%%%%%%%%%%%%%% Début du document %%%%%%%%%%%%%%%%%%%%
