@@ -31,7 +31,7 @@ wget http://www.kamailio.org/pub/kamailio/4.2.2/src/kamailio-4.2.2_src.tar.gz
 tar xvf kamailio-4.2.2_src.tar.gz
 \end{shellcode}
 
-Puis nous sommes allés dans le dossier ainsi créé, pour notre part kamailio-4.2.2 et nous avons exécuté :
+Puis nous sommes allés dans le dossier ainsi créé, \texttt{kamailio-4.2.2}, et nous avons exécuté :
 
 \begin{shellcode}
 make cfg
@@ -40,11 +40,12 @@ make cfg
 Cette commande construit la configuration par défaut pour la compilation, qu’il a fallu adapter à nos besoins. Conformément aux indications du rapport de l’année dernière, nous avons effectué les modifications suivantes :
 
 \begin{itemize}
-	\item{dans la liste de modules exclus du fichier \texttt{module.lst}, nous avons retiré les noms des modules concernant {\my} et {\rad}}.
+	\item{dans la liste de modules exclus du fichier \texttt{module.lst}, nous avons retiré les noms des modules concernant {\my} et {\rad}} ;
+	\item{dans le fichier \texttt{modules\_k/acc}, nous avons décommenté la ligne \kamcfil{ENABLE\_RADIUS\_ACC=true}}.
 \end{itemize}
 
-Nuos avons ensuite compilé et installé {\kam} :
-	
+Nous avons ensuite compilé et installé {\kam} :
+
 \begin{shellcode}
 make all
 make install
@@ -79,26 +80,20 @@ Ensuite, nous avons tapé
 \subsection{\frad}
 \subsubsection{Installation}
 
-Nous avons choisi ensuite d'installer {\frad} à partir des paquets présents sur la machine. Pour cela, il a fallu taper la commande :
+Nous avons installé {\frad} ainsi que les outils de test associés à partir des paquets disponibles. Pour cela, il a fallu taper la commande :
 
 \begin{shellcode}
-apt-get install freeradius
+apt-get install freeradius freeradius-utils
 \end{shellcode}
 
-Il fallait aussi installer les outils nécessaires au bon fonctionnement de {\frad} :
-
-\begin{shellcode}
-apt-get install freeradius-utils
-\end{shellcode}
-
-Puis, pour finir, nous avons installé un client Radius nommé Radiusclient grâce à la commande suivante :
+Puis, pour finir, nous avons installé le client {\rad} proposé par {\frad} grâce à la commande suivante :
 
 \begin{shellcode}
 apt-get install radiusclient1
 \end{shellcode}
 
 \subsubsection{Configuration}
-Nous avions fini d'installer {\frad}. Il nous restait donc à le configurer. Ce serveur {\rad} peut être configuré de deux manières différentes. Soit à partir des fichiers présents dans \texttt{/etc/freeradius}, soit à partir d'une base de données. Nous avons choisi de configurer à partir des fichiers. Il a donc fallu aller vérifier si la configuration se faisait bien grâce aux fichiers. Pour cela, il a suffi d'aller vérifier dans le fichier \texttt{/etc/freeradius/sites-available/default}.
+Nous avions fini d'installer {\frad}. Il nous restait donc à le configurer. Ce serveur {\rad} peut être configuré de deux manières différentes : soit à partir des fichiers présents dans \texttt{/etc/freeradius}, soit à partir d'une base de données. Nous avons choisi de configurer à partir des fichiers. Il a donc fallu aller vérifier si la configuration se faisait bien grâce aux fichiers. Pour cela, il a suffi d'aller vérifier dans le fichier \texttt{/etc/freeradius/sites-available/default}.
 
 Ensuite, nous sommes allés dans le répertoire \texttt{/etc/freeradius} afin de modifier le fichier \texttt{users}. Dans ce fichier, nous avons ajouté des utilisateurs de la façon suivantes :
 
@@ -114,30 +109,28 @@ radtest login password localhost 0 testing123
 
 Le paramètre "testing123" est le mot de passe donné par défaut au client localhost dans le fichier \texttt{/etc/freeradius/client.conf}. Nous l'avons ensuite changé en "kamailio".
 
-
 \subsubsection{Intégration de {\rad} à {\kam}}
 
-Pour commencer, il a fallu copier les dictionnaires \texttt{/usr/local/etc/kamailio/dictionary.kamailio} et \texttt{/usr/local/etc/kamailio/dictionary.sip} dans le répertoire \texttt{/etc/radiusclient-ng}.
+Pour commencer, il a fallu copier les dictionnaires \texttt{dictionary.kamailio} et \texttt{dictionary.sip} dans le répertoire \texttt{/etc/radiusclient-ng} :
 
 \begin{shellcode}
 cp /usr/local/etc/kamailio/dictionary.kamailio /etc/radiusclient-ng
-
 cp /usr/local/etc/kamailio/dictionary.sip /etc/radiusclient-ng
 \end{shellcode}
 
 Puis, nous avons inclus dans \texttt{/etc/radiusclient-ng/dictionary} les deux fichiers suivants :
 
 \begin{itemize}
-\item{\texttt{/etc/radiusclient-ng/dictionary.kamailio}}
-\item{\texttt{/etc/radiusclient-ng/dictionary.sip}}
+\item{\texttt{/etc/radiusclient-ng/dictionary.kamailio} ;}
+\item{\texttt{/etc/radiusclient-ng/dictionary.sip}.}
 \end{itemize}
 
 Puis il a fallu décommenter les lignes des attributs ou des valeurs Failed, Sip-Session et Call-Check dans les trois fichiers dictionary.
 
 Nous avons ensuite dû vérifier que les deux lignes suivantes,qui donnent l'adresse du serveur {\rad}, se trouvaient bien dans le fichier \texttt{/etc/radiusclient-ng/radiusclient.conf} :
 
-\begin{itemize}
-\item{authserver localhost}
-\item{acctserver localhost}
-\end{itemize}
+\begin{verbatim}
+authserver localhost
+acctserver localhost
+\end{verbatim}
 
