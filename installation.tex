@@ -113,7 +113,18 @@ radtest login password localhost 0 testing123
 
 Le paramètre "testing123" est le mot de passe donné par défaut au client localhost dans le fichier \texttt{/etc/freeradius/client.conf}. Nous l'avons ensuite changé en "kamailio".
 
-Pour finir, nous avons inclus dans \texttt{/etc/radiusclient-ng/dictionary} les deux fichiers suivants :
+
+\subsubsection{Intégration de {\rad} à {\kam}}
+
+Pour commencer, il a fallu copier les dictionnaires \texttt{/usr/local/etc/kamailio/dictionary.kamailio} et \texttt{/usr/local/etc/kamailio/dictionary.sip} dans le répertoire \texttt{/etc/radiusclient-ng}.
+
+\begin{shellcode}
+cp /usr/local/etc/kamailio/dictionary.kamailio /etc/radiusclient-ng
+
+cp /usr/local/etc/kamailio/dictionary.sip /etc/radiusclient-ng
+\end{shellcode}
+
+Puis, nous avons inclus dans \texttt{/etc/radiusclient-ng/dictionary} les deux fichiers suivants :
 
 \begin{itemize}
 \item{\texttt{/etc/radiusclient-ng/dictionary.kamailio}}
@@ -121,3 +132,11 @@ Pour finir, nous avons inclus dans \texttt{/etc/radiusclient-ng/dictionary} les 
 \end{itemize}
 
 Puis il a fallu décommenter les lignes des attributs ou des valeurs Failed, Sip-Session et Call-Check dans les trois fichiers dictionary.
+
+Nous avons ensuite dû vérifier que les deux lignes suivantes,qui donnent l'adresse du serveur {\rad}, se trouvaient bien dans le fichier \texttt{/etc/radiusclient-ng/radiusclient.conf} :
+
+\begin{itemize}
+\item{authserver localhost}
+\item{acctserver localhost}
+\end{itemize}
+
