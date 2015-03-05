@@ -2,9 +2,9 @@ TEXFILES=$(wildcard *.tex)
 
 rapport.pdf: $(TEXFILES)
 	touch annexes.tex
-	pdflatex rapport.tex
+	pdflatex -shell-escape rapport.tex
 	cp rapport.ann annexes.tex
-	pdflatex rapport.tex
+	pdflatex -shell-escape rapport.tex
 
 consultation: rapport.pdf
 	evince $^

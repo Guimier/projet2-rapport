@@ -17,6 +17,21 @@
 \usepackage{xcolor} % Utilisé pour les hiddeux \todo
 \usepackage{layout} % Pour voir les commandes utiles
 
+% Couleurs
+\usepackage{color}
+\definecolor{coloration_numero_ligne}{gray}{0.6}
+\definecolor{coloration_reglette}{gray}{0.5}
+\definecolor{coloration_fond}{rgb}{1, 1, 1}
+\definecolor{coloration_commentaire}{rgb}{0, 0, 0.9}
+\definecolor{coloration_mot_cle}{rgb}{0.75, 0, 0}
+\definecolor{coloration_chaine}{rgb}{1, 0.2, 1}
+\definecolor{coloration_type}{rgb}{0, 0.7, 0}
+\definecolor{coloration_erreurs}{rgb}{0.6, 0.35, 0.8}
+
+% Coloration syntaxique
+\usepackage{minted}
+\newminted{shell}{tabsize=4,xleftmargin=1cm}
+
 %%%%%%%%%% Commandes supplémentaires %%%%%%%%%%%
 
 % Marquage du travail restant
@@ -46,9 +61,6 @@
 	\immediate\openout\tf@ann\jobname.ann\relax
       
 \makeatother
-
-% Afficher des commandes shell.
-\newenvironment{shell}{\todo[Début shell]\\}{\\\todo[Fin shell]}
 
 %%%%%%%%%% Abréviations %%%%%%%%%%
 % Le contenu suffit comme documentation…

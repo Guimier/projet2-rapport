@@ -26,16 +26,16 @@ Nous avions initialement envisagé d’utiliser ensuite les paquets Debian dispo
 
 Nous avons donc téléchargé et décompressé les sources de {\kam} pour les compiler. Nous avons choisi d’utiliser la dernière version disponible, qui était la version 4.2.2. Pour cela, nous avons utilisé les commandes :
 
-\begin{shell}
-wget http://www.kamailio.org/pub/kamailio/4.2.2/src/kamailio-4.2.2\_src.tar.gz
-tar xvf kamailio-4.2.2\_src.tar.gz
-\end{shell}
+\begin{shellcode}
+wget http://www.kamailio.org/pub/kamailio/4.2.2/src/kamailio-4.2.2_src.tar.gz
+tar xvf kamailio-4.2.2_src.tar.gz
+\end{shellcode}
 
 Puis nous sommes allés dans le dossier ainsi créé, pour notre part kamailio-4.2.2 et nous avons exécuté :
 
-\begin{shell}
+\begin{shellcode}
 make cfg
-\end{shell}
+\end{shellcode}
 
 Cette commande construit la configuration par défaut pour la compilation, qu’il a fallu adapter à nos besoins. Conformément aux indications du rapport de l’année dernière, nous avons effectué les modifications suivantes :
 
@@ -45,10 +45,10 @@ Cette commande construit la configuration par défaut pour la compilation, qu’
 
 Nuos avons ensuite compilé et installé {\kam} :
 	
-\begin{shell}
+\begin{shellcode}
 make all
 make install
-\end{shell}
+\end{shellcode}
 
 Cette dernière commande installe {\kam} dans \texttt{/usr/local}.
 
@@ -70,9 +70,9 @@ Dans notre cas, c'est mysql. C'est pourquoi il a fallu aller dans le fichier \te
 DBENGINE=MYSQL
 
 Ensuite, nous avons tapé 
-\begin{shell}
+\begin{shellcode}
 /usr/local/sbin/kamdbctl create
-\end{shell}
+\end{shellcode}
 \todo
 
 \subsection{\frad}
@@ -80,21 +80,21 @@ Ensuite, nous avons tapé
 
 Nous avons choisi ensuite d'installer {\frad} à partir des paquets présents sur la machine. Pour cela, il a fallu taper la commande :
 
-\begin{shell}
+\begin{shellcode}
 apt-get install freeradius
-\end{shell}
+\end{shellcode}
 
 Il fallait aussi installer les outils nécessaires au bon fonctionnement de {\frad} :
 
-\begin{shell}
+\begin{shellcode}
 apt-get install freeradius-utils
-\end{shell}
+\end{shellcode}
 
 Puis, pour finir, nous avons installé un client Radius nommé Radiusclient grâce à la commande suivante :
 
-\begin{shell}
+\begin{shellcode}
 apt-get install radiusclient1
-\end{shell}
+\end{shellcode}
 
 \subsubsection{Configuration}
 Nous avions fini d'installer {\frad}. Il nous restait donc à le configurer. Ce serveur {\rad} peut être configuré de deux manières différentes. Soit à partir des fichiers présents dans \texttt{/etc/freeradius}, soit à partir d'une base de données. Nous avons choisi de configurer à partir des fichiers. Il a donc fallu aller vérifier si la configuration se faisait bien grâce aux fichiers. Pour cela, il a suffi d'aller vérifier dans le fichier \texttt{/etc/freeradius/sites-available/default}.
@@ -107,9 +107,9 @@ Cette ligne autorise l'utilisateur login à se connecter avec le mot de passe "p
 
 Nous avons pû ensuite faire le test en utilisant la commande suivante :
 
-\begin{shell}
+\begin{shellcode}
 radtest login password localhost 0 testing123
-\end{shell}
+\end{shellcode}
 
 Le paramètre "testing123" est le mot de passe donné par défaut au client localhost dans le fichier \texttt{/etc/freeradius/client.conf}. Nous l'avons ensuite changé en "kamailio".
 
