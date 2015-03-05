@@ -56,18 +56,19 @@ Cette dernière commande installe {\kam} dans \texttt{/usr/local}.
 
 Nous avons dû ensuite configurer {\kam}. Nous sommes allés dans le dossier \texttt{/usr/local/etc/kamailio}. Il a fallu rajouter les lignes suivantes dans le fichier de configuration \texttt{kamailio.cfg} :
 
-\#!define WITH\_MYSQL
-
-\#!define WITH\_AUTH
-
-\#!define WITH\_USRLOCDB
-
-\#!define WITH\_NAT
+\begin{kamcf}
+#!define WITH_MYSQL
+#!define WITH_AUTH
+#!define WITH_USRLOCDB
+#!define WITH_NAT
+\end{kamcf}
 
 Nous avons alors créé puis configuré la base de données. Pour la créer, il a fallu d'abord préciser quel système de base de données nous allions utiliser.
 Dans notre cas, c'est mysql. C'est pourquoi il a fallu aller dans le fichier \texttt{/usr/local/etc/kamailio/kamctlrc} afin de décommenter la ligne :
 
+\begin{kamcf}
 DBENGINE=MYSQL
+\end{kamcf}
 
 Ensuite, nous avons tapé 
 \begin{shellcode}
