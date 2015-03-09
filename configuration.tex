@@ -51,9 +51,11 @@
 %%% Gestion des annexes
 \makeatletter
 	
+	\newcounter{annctr}
+	
 	% Définir une annexe
 	% {#1} Nom de l’annexe
-	\newcommand{\annexe}[1]{\newpage\addcontentsline{ann}{section}{#1}\section*{#1}}
+	\newcommand{\annexe}[1]{\stepcounter{annctr}\addcontentsline{ann}{section}{\protect\numberline {\Alph{annctr}}#1}\section*{\numberline {\Alph{annctr}}#1}}
 	% Lister les annexes
 	% Note : ce serait quand même bien de le faire fonctionner sans avoir besoin du makefile.
 	\newcommand\listeannexes{\sectionSpeciale{Annexes}\input{annexes.tex}}
