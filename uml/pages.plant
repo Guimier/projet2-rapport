@@ -1,0 +1,63 @@
+abstract class Page {
+	# array params
+	# array config
+	# void build()
+	# {abstract} html getContent()
+	# {abstract} string getTitle()
+	+ void display()
+	# {static} html buildGroupSelect( array )
+	# {static} html buildYearMonthSelect()
+	# {static} html buildInput( string, string, string )
+	# {static} html buildForm( string, html, string, html )
+}
+
+class IndexPage extends Page {
+	# string getTitle()
+	# html getContent()
+}
+
+class ExceptionPage extends Page {
+	# string getTitle()
+	# html getContent()
+}
+
+abstract class LogPage extends Page {
+	# string getTitle()
+	# html getContent()
+	# prepareLog( AccountContext, string )
+}
+
+class AccountLogPage extends LogPage {
+	+ {static} html buildAccessForm()
+	# void build()
+}
+
+class GlobalLogPage extends LogPage {
+	+ {static} html buildAccessForm()
+	# void build()
+}
+
+class GroupLogPage extends LogPage {
+	+ {static} string buildAccessForm()
+	# void build()
+}
+
+abstract class InvoicePage extends Page {
+	# {abstract} PriceFilters getPriceFilter()
+	# {abstract} AccountContext getContext()
+	# void build()
+	# string getTitle()
+	# html getContent()
+}
+
+class AccountInvoicePage extends InvoicePage {
+	+ {static} html buildAccessForm()
+	# PriceFilters getPriceFilter()
+	# AccountContext getContext()
+}
+
+class GroupInvoicePage extends InvoicePage {
+	+ {static} html buildAccessForm()
+	# PriceFilters getPriceFilter()
+	# AccountContext getContext()
+}
