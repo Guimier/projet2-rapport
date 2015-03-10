@@ -1,0 +1,13 @@
+\subsection{Affichage du journal}
+
+Dans un premier temps, nous avons vérifié le fonctionnement du système de lecture du journal grâce à un script simple exécuté en console, puis nous avons travaillé sur un système de construction de pages HTML.
+
+\subsubsection{Architecture de l’affichage}
+
+L’affichage est réalisé grâce à un ensemble de classes héritant de la classe abstraite \classe{Page} (un diagramme recensant ces classes est fourni en annexe), ce qui permet d’uniformiser les comportements en les intégrant à une base commune, stockée dans un fichier \texttt{template.php}.
+
+La construction de l’interface est effectuée en deux étapes, exécutées immédiatement l’une après l’autre dans le fichier \texttt{index.php} : l’object \classe{Page} est instancié ; il stocke les paramètres du constructeur — la configuration et les paramètres de la requête — puis appelle la méthode \texttt{build}, définie par les sous-classes. Cette méthode a pour rôle la récupération des données à afficher. Dans le cas ou l’exécution de cette méthode lève une exception, la page construit un objet \classe{ExceptionPage} qui affichera l’exception.
+
+La seconde étape est l’envoi des données à l’utilisateur, qui a lieu lors de l’appel de la méthode \texttt{display}. Celle-ci consiste en l’inclusion du fichier \texttt{template.php} ou, le cas échéant, en la délégation à la méthode \texttt{display} de l’objet \classe{ExceptionPage} créé. Le fichier \texttt{template.php}, une fois inclus, se comporte comme une partie de la méthode \texttt{build} et accède aux deux méthodes abstraite de la classe \classe{Page}, \texttt{getContent} et \texttt{getTitle}, qui retournent respectivement le contenu de la page (chaîne de caractère contenant du HTML partiel sans balise orpheline) et son titre (chaîne de caractères). Ces deux méthodes se contentent d’effectuer le formatage des données acquises précédemment et son supposées ne pas lever d’exception.
+
+La construction de la page dans un fichier unique \texttt{template.php} et l’utilisation des méthodes statiques de la classe \classe{Page} permettent une uniformisation aisée des pages et une modification rapide.

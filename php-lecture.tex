@@ -46,7 +46,7 @@ Le champ \texttt{Acct-status-Type} permet de connaître le type d’action qui a
 	\item[\texttt{Failed}] Appel avorté, a lieu lorsque l’appelant abandonne ou lorsque l’appelé décline l’appel.
 \end{description}
 
-\subsubsection{Désérialisation du journal}
+\subsubsection{Interprétation du journal}
 
 Pour simplifier les évolutions éventuelles, nous avons décidé d’effectuer une désérialisation intégrale des données. Bien que moins efficace en mémoire et en temps qu’un algorithme d’extraction optimisé, une désérialisation simmplifie l’adaptation aux modifications de configuration (ajout de champs) et de besoins (nécessité de lire un champ laissé de côté).
 
