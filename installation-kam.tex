@@ -1,0 +1,69 @@
+\subsection{\kam}
+
+\subsubsection{Installation}
+
+Pour installer {\kam}, il nous a fallu commencer par installer les dépendances qui n’étaient pas encore présentes dans le système, disponibles dans les paquets :
+
+\begin{itemize}
+	\item{gcc} ;
+	\item{bison} ;
+	\item{libmysqlclient-dev} ;
+	\item{libradiusclient-ng-dev} ;
+	\item{mysql-server} ;
+	\item{mysql-client} ;
+	\item{make}.
+\end{itemize}
+
+Nous avions initialement envisagé d’utiliser ensuite les paquets Debian disponibles sur les serveurs de {\kam}, mais le paquet de base n’est pas compilé avec le support de {\rad}, rendant le paquet des bibliothèques d’authentification {\rad} inopérant.
+
+Nous avons donc téléchargé et décompressé les sources de {\kam} pour les compiler. Nous avons choisi d’utiliser la dernière version disponible, qui était la version 4.2.2. Pour cela, nous avons utilisé les commandes :
+
+\begin{verbatim}
+wget http://www.kamailio.org/pub/kamailio/4.2.2/src/kamailio-4.2.2_src.tar.gz
+tar xvf kamailio-4.2.2_src.tar.gz
+\end{verbatim}
+
+Puis nous sommes allés dans le dossier ainsi créé, \texttt{kamailio-4.2.2}, et nous avons exécuté :
+
+\begin{verbatim}
+make cfg
+\end{verbatim}
+
+Cette commande construit la configuration par défaut pour la compilation, qu’il a fallu adapter à nos besoins. Conformément aux indications du rapport de l’année dernière, nous avons effectué les modifications suivantes :
+
+\begin{itemize}
+	\item{dans la liste de modules exclus du fichier \texttt{module.lst}, nous avons retiré les noms des modules concernant {\my} et {\rad}} ;
+	\item{dans le fichier \texttt{modules\_k/acc}, nous avons décommenté la ligne \texttt{ENABLE\_RADIUS\_ACC=true}}.
+\end{itemize}
+
+Nous avons ensuite compilé et installé {\kam} :
+
+\begin{verbatim}
+make all
+make install
+\end{verbatim}
+
+Sans précision supplémentaire, cette dernière commande installe {\kam} dans \texttt{/usr/local}.
+
+\subsubsection{Configuration}
+
+Nous avons dû ensuite configurer {\kam} dans le répertoire \texttt{/usr/local/etc/kamailio}. Il a fallu rajouter les lignes suivantes dans le fichier de configuration \texttt{kamailio.cfg} :
+
+\begin{kamcf}
+#!define WITH_MYSQL
+#!define WITH_AUTH
+#!define WITH_USRLOCDB
+#!define WITH_NAT
+\end{kamcf}
+
+Nous avons alors créé puis configuré la base de données. Pour la créer, il a fallu d'abord préciser quel système de base de données nous allions utiliser. Dans notre cas, c'est \my. C'est pourquoi il a fallu aller dans le fichier \texttt{kamctlrc} afin de décommenter la ligne :
+
+\begin{kamcf}
+DBENGINE=MYSQL
+\end{kamcf}
+
+Ensuite, nous avons tapé 
+\begin{verbatim}
+/usr/local/sbin/kamdbctl create
+\end{verbatim}
+\todo
