@@ -18,10 +18,12 @@ Nous avions initialement envisagé d’utiliser ensuite les paquets Debian dispo
 
 Nous avons donc téléchargé et décompressé les sources de {\kam} pour les compiler. Nous avons choisi d’utiliser la dernière version disponible, qui était la version 4.2.2. Pour cela, nous avons utilisé les commandes :
 
+\begin{small}
 \begin{verbatim}
 wget http://www.kamailio.org/pub/kamailio/4.2.2/src/kamailio-4.2.2_src.tar.gz
 tar xvf kamailio-4.2.2_src.tar.gz
 \end{verbatim}
+\end{small}
 
 Puis nous sommes allés dans le dossier ainsi créé, \texttt{kamailio-4.2.2}, et nous avons exécuté :
 
@@ -33,7 +35,10 @@ Cette commande construit la configuration par défaut pour la compilation, qu’
 
 \begin{itemize}
 	\item{dans la liste de modules exclus du fichier \texttt{module.lst}, nous avons retiré les noms des modules concernant {\my} et {\rad}} ;
-	\item{dans le fichier \texttt{modules\_k/acc}, nous avons décommenté la ligne \texttt{ENABLE\_RADIUS\_ACC=true}}.
+	\item{dans le fichier \texttt{modules\_k/acc}, nous avons décommenté la ligne suivante :
+\begin{verbatim}
+ENABLE_RADIUS_ACC=true
+\end{verbatim}}
 \end{itemize}
 
 Nous avons ensuite compilé et installé {\kam} :
@@ -49,18 +54,18 @@ Sans précision supplémentaire, cette dernière commande installe {\kam} dans \
 
 Nous avons dû ensuite configurer {\kam} dans le répertoire \texttt{/usr/local/etc/kamailio}. Il a fallu rajouter les lignes suivantes dans le fichier de configuration \texttt{kamailio.cfg} :
 
-\begin{kamcf}
+\begin{verbatim}
 #!define WITH_MYSQL
 #!define WITH_AUTH
 #!define WITH_USRLOCDB
 #!define WITH_NAT
-\end{kamcf}
+\end{verbatim}
 
 Nous avons alors créé puis configuré la base de données. Pour la créer, il a fallu d'abord préciser quel système de base de données nous allions utiliser. Dans notre cas, c'est \my. C'est pourquoi il a fallu aller dans le fichier \texttt{kamctlrc} afin de décommenter la ligne :
 
-\begin{kamcf}
+\begin{verbatim}
 DBENGINE=MYSQL
-\end{kamcf}
+\end{verbatim}
 
 Ensuite, nous avons tapé 
 \begin{verbatim}
