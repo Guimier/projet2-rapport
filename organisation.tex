@@ -8,6 +8,18 @@
 
 \todo[Travail parallèle -> commun ; oubli de prise de notes structurée ; montage deuxième serveur]
 
-\subsection{Écriture du code}
+\subsection{Écriture de l’interface de facturation}
 
-\todo[PHP objet ; Github ; Doxygen]
+Le cahier des charges de notre projet nous imposait de travailler en PHP. Nous avons structuré notre code grâce à la syntaxe orientée objet disponible en PHP 5 et le développement a été réalisé sur plusieurs installations différentes :
+\begin{itemize}
+	\item notre serveur, qui dispose de la dernière version dans les paquets de la distributions que nous avons utilisée, la 5.4.36 ;
+	\item le serveur web de l’ISIMA, \texttt{fc.isima.fr}, qui dispose d’une ancienne version qui n’est plus supportée mais encore appréciée pour sa stabilité, la 5.3.3 ;
+	\item l’ordinateur de Lucien, qui dispose de la version 5.5.? \todo{regarder le numéro de patch}.
+\end{itemize}
+
+Afin de pouvoir travailler simultanément sur le code, nous avons utilisé le gestionnaire de versions Git, avec un dépôt commun sur Github, disponible à l’adresse
+\begin{verbatim}
+https://github.com/Guimier/projet2-php
+\end{verbatim}
+
+Nous nous sommes efforcés de conserver à jour une documentation de bas niveau, grâce au logiciel Doxygen, qui permet de documenter directement les classes et les méthodes dans les commentaires du code. Cette documentation est générée par la commande \texttt{doxygen} exécutée dans le répertoire racine du dépôt Git.
