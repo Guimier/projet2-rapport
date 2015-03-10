@@ -5,4 +5,5 @@
 *.aux
 *.pdf
 *~
+*.out
 annexes.tex

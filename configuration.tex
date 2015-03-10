@@ -7,6 +7,8 @@
 \usepackage[T1]{fontenc} % ???
 \usepackage[francais]{babel} % Typographie française
 
+\usepackage{cleveref}
+
 % Images
 \usepackage{graphicx}
 
@@ -27,6 +29,14 @@
 \definecolor{coloration_chaine}{rgb}{1, 0.2, 1}
 \definecolor{coloration_type}{rgb}{0, 0.7, 0}
 \definecolor{coloration_erreurs}{rgb}{0.6, 0.35, 0.8}
+
+% Tabulations verbatim
+% http://www.grappa.univ-lille3.fr/FAQ-LaTeX/6.16.html
+\makeatletter
+{\catcode`\^^I=\active
+\gdef\verbatim{\catcode`\^^I=\active\def^^I{\hspace*{4em}}%
+\@verbatim \frenchspacing\@vobeyspaces \@xverbatim}}
+\makeatother
 
 % Coloration syntaxique
 \usepackage{minted}

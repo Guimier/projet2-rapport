@@ -1,0 +1,49 @@
+\subsection{Lecture du journal créé par \frad}
+
+\subsubsection{Accès au journal}
+
+Le fichiers constituant le journal que crée {\frad} sont situés dans le dossier \texttt{/var/log/freeradius/radacct/127.0.0.1}. Un fichier est créé chaque jour d’activité, son nom étant de la forme \texttt{detail-aaaammjj} où \texttt{a}, \texttt{m} et \texttt{j} représentent les chiffres de l’année, le mois et le jour du mois.
+
+Lors de l’installation, tous ces fichiers sont accessibles uniquement à \texttt{root}. Nous avons dans un premier temps modifié le groupe des répertoires pour permettre au démon HTTP d’accéder aux fichiers et nous avons configuré le dernier répertoire en mode \texttt{setgid} afin que les nouveaux fichiers héritent du bon groupe.
+
+Cependant cette configuration n’a pas été suffisante, car {\frad} créer les fichiers avec des droits de lecture uniquement pour l’utilisateur propriétaire. Afin de nous concentrer sur le cœur du projet, nous nous sommes contentés d’une solution simple, consistant à ajouter un job dans la \texttt{crontab} donnant régulièrement les droits au démon HTTP sur les fichiers nouvellemnt créés.
+
+Pour notre confort pendant le travail, nous avons choisi une fréquence relativement élevée, mais une fréquence nettement plus faible — le premier du mois par exemple — serait suffisante sur un serveur en production et représente un charge négligeable pour le système. Cependant il aurait pu être intéressant de configurer ce comportement directement dans {\frad} ou de l’intégrer dans un script de déplacement des fichiers (permettant leur classement et donc une meilleure lisibilité, le répertoire pouvant se remplir vite avec un fichier par jour).
+
+\subsubsection{Format du journal}
+
+\begin{figure}[h!]
+\begin{verbatim}
+Mon Jan 19 10:52:26 2015
+	Acct-Status-Type = Start
+	Service-Type = SIP
+	Sip-Response-Code = 200
+	Sip-Method = Invite
+	Event-Timestamp = "Jan 19 2015 10:52:26 CET"
+	Sip-From-Tag = "1514023998"
+	Sip-To-Tag = "DbEJdfR"
+	Acct-Session-Id = "48771904"
+	Calling-Station-Id = "sip:8000@ikone20.rcisima.isima.fr"
+	Called-Station-Id = "sip:8001@ikone20.rcisima.isima.fr"
+	NAS-Port = 5060
+	Acct-Delay-Time = 0
+	NAS-IP-Address = 127.0.0.1
+	Acct-Unique-Session-Id = "313763d445993202"
+	Timestamp = 1421661146
+\end{verbatim}
+\caption{Exemple d’enregistrement dans le journal de \frad}
+\label{radrecord}
+\end{figure}
+
+\todo[Rappeler ici la ligne de configuration de {\kam} qui permet l’extension.]
+
+Ces fichiers sont constitués d’une liste d’enregistrements correspondant à des actions des utilisateurs, séparés par un double saut de ligne. Chacun de ces enregistrements commence par une date formatée, puis est constitué d’une liste de champs extensible (voir \cref{radrecord}).
+
+
+Le champ \texttt{Acct-status-Type} permet de connaître le type d’action qui a provoqué la journalisation. Nous avons rencontré trois valeurs lors de nos essais :
+\begin{description}
+	\item[\texttt{Start}] Début d’un appel, a lieu lorsque l’appelé décroche.
+	\item[\texttt{Stop}] Fin d’un appel, a lieu lorsque l’une des deux personnes communicant raccroche.
+	\item[\texttt{Failed}] Appel avorté, a lieu lorsque l’appelant abandonne ou lorsque l’appelé décline l’appel.
+\end{description}
+
