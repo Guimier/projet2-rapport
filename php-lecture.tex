@@ -39,7 +39,6 @@ Mon Jan 19 10:52:26 2015
 
 Ces fichiers sont constitués d’une liste d’enregistrements correspondant à des actions des utilisateurs, séparés par un double saut de ligne. Chacun de ces enregistrements commence par une date formatée, puis est constitué d’une liste de champs extensible (voir \cref{radrecord}).
 
-
 Le champ \texttt{Acct-status-Type} permet de connaître le type d’action qui a provoqué la journalisation. Nous avons rencontré trois valeurs lors de nos essais :
 \begin{description}
 	\item[\texttt{Start}] Début d’un appel, a lieu lorsque l’appelé décroche.
@@ -47,3 +46,38 @@ Le champ \texttt{Acct-status-Type} permet de connaître le type d’action qui a
 	\item[\texttt{Failed}] Appel avorté, a lieu lorsque l’appelant abandonne ou lorsque l’appelé décline l’appel.
 \end{description}
 
+\subsubsection{Désérialisation du journal}
+
+Pour simplifier les évolutions éventuelles, nous avons décidé d’effectuer une désérialisation intégrale des données. Bien que moins efficace en mémoire et en temps qu’un algorithme d’extraction optimisé, une désérialisation simmplifie l’adaptation aux modifications de configuration (ajout de champs) et de besoins (nécessité de lire un champ laissé de côté).
+
+La désérialisation est effectuée séparément pour chaque fichier et son résultat est un tableau ordonné des enregistrements, représentés sous forme d’un tableau associatif correpondant directement aux associations clé-valeur du journal produit par {\frad}. La date donnée sur la première ligne d’un enregistrement étant redondante avec le champ \texttt{Timestamp}, elle n’est pas intégrée dans le résultat.
+
+Afin de produire des factures et des listes mensuelles, ces tableaux d’enregistrements sont concaténés avant d’être interprétés.
+
+La transformation du journal d’événements en une liste d’appels est effectuée selon l’algorithme suivant :
+\begin{itemize}
+	\item initialiser une liste vide d’appels ;
+	\item initialiser une liste vide de débuts d’appels ;
+	\item lire la liste des enregistrements pour la période ;
+	\item pour tous les enregistrements :
+		\begin{itemize}
+			\item si l’enregistrement est de type \texttt{Start}, ajouter un début d’appel à la liste des débuts d’appels,
+			\item si l’enregistrement est de type \texttt{Stop} :
+				\begin{itemize}
+					\item si le début de l’appel n’a pas été rencontré, lever une exception
+					\item si le début de l’appel a avorté, passer à l’enregistrement suivant
+					\item ajouter un appel effectif à la liste des appel avec les informations des deux enregistrements
+					\item retirer le début d’appel de la liste des débuts d’appels,
+				\end{itemize}
+			\item si l’enregistrement est de type \texttt{Failed} :
+				\begin{itemize}
+					\item ajouter un appel avorté à la liste des appel avec les informations de l’enregistrement
+					\item signaler un appel avorté dans la liste des débuts d’appels,
+				\end{itemize}
+			\item si l’enregistrement est d’un autre type, lever une exception ;
+		\end{itemize}
+	\item s’il reste des débuts d’appels non avortés, lever une exception ;
+	\item retourner la liste des appels.
+\end{itemize}
+
+Il s’agit d’une seconde version de l’algorithme : la première n’ajoutait pas d’information à propos des appels avortés dans la liste des débuts d’appels, mais nous avons été confronté à un cas où, pour un même appel, deux enregistrements \texttt{Failed} et \texttt{Stop} se suivaient. Nos n’avons pas pu reproduire le cas et ne savons donc pas s’il s’agit d’un cas normal ou dû aux manipulation inhabituelles que nous avons effectuées durant la phase de développement : nous étions effectivement dans une phase où nous avons pusieurs fois de suite redémarré les serveurs pour tenter de régler des problèmes de communications.
