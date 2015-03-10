@@ -2,11 +2,11 @@
 
 \subsubsection{Accès au journal}
 
-Le fichiers constituant le journal que crée {\frad} sont situés dans le dossier \texttt{/var/log/freeradius/radacct/127.0.0.1}. Un fichier est créé chaque jour d’activité, son nom étant de la forme \texttt{detail-aaaammjj} où \texttt{a}, \texttt{m} et \texttt{j} représentent les chiffres de l’année, le mois et le jour du mois.
+Le fichiers constituant le journal que crée {\frad} sont situés dans le dossier \texttt{/var/log/freeradius/radacct/127.0.0.1}. Un fichier est créé chaque jour d’activité, son nom étant de la forme \texttt{detail-aaaammjj} où \texttt{a}, \texttt{m} et \texttt{j} représentent les chiffres de l’année, du mois et du jour du mois.
 
 Lors de l’installation, tous ces fichiers sont accessibles uniquement à \texttt{root}. Nous avons dans un premier temps modifié le groupe des répertoires pour permettre au démon HTTP d’accéder aux fichiers et nous avons configuré le dernier répertoire en mode \texttt{setgid} afin que les nouveaux fichiers héritent du bon groupe.
 
-Cependant cette configuration n’a pas été suffisante, car {\frad} créer les fichiers avec des droits de lecture uniquement pour l’utilisateur propriétaire. Afin de nous concentrer sur le cœur du projet, nous nous sommes contentés d’une solution simple, consistant à ajouter un job dans la \texttt{crontab} donnant régulièrement les droits au démon HTTP sur les fichiers nouvellemnt créés.
+Cependant cette configuration n’a pas été suffisante, car {\frad} créer les fichiers avec des droits de lecture uniquement pour l’utilisateur propriétaire. Afin de nous concentrer sur le cœur du projet, nous nous sommes contentés d’une solution simple, consistant à ajouter un job dans la \texttt{crontab} donnant régulièrement les droits au démon HTTP sur les fichiers nouvellement créés.
 
 Pour notre confort pendant le travail, nous avons choisi une fréquence relativement élevée, mais une fréquence nettement plus faible — le premier du mois par exemple — serait suffisante sur un serveur en production et représente un charge négligeable pour le système. Cependant il aurait pu être intéressant de configurer ce comportement directement dans {\frad} ou de l’intégrer dans un script de déplacement des fichiers (permettant leur classement et donc une meilleure lisibilité, le répertoire pouvant se remplir vite avec un fichier par jour).
 
