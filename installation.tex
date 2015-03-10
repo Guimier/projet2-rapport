@@ -140,3 +140,34 @@ Nous avons ensuite dû vérifier que les deux lignes suivantes,qui donnent l'adr
 \item{acctserver localhost}
 \end{itemize}
 
+Nous avons ensuite été modifier le fichier \texttt{/etc/radiusclient-ng/servers}. Nous avons annoncé notre serveur de la façon suivante :
+
+
+192.168.102.120		kamailio
+
+
+Ce fichier contient l'adresse des serveurs {\rad} et leurs clefs. Ainsi nous avons choisi la clef "kamailio".
+
+Puis ensuite il a fallu aller modifier le fichier \texttt{/etc/freeradius/clients.conf} qui définit les clients autorisés par le serveur {\frad} :
+
+\begin{shellcode}
+Client localhost
+{
+ ipaddress = 192.168.102.120
+ secret = kamailio
+}
+\end{shellcode}
+
+Nous avons dû ensuite modifier le fichier \texttt{/etc/freeradius/users}. Nous avons tout effacer et avons écrit les utilisateurs autorisés ou pas de la manière suivante :
+
+
+7000@192.168.102.120 Auth-Type=Accept
+7001@192.168.102.120 Auth-Type=Accept
+7003@192.168.102.120 Auth-Type=Reject
+
+
+Cela autorise les utilisateurs 7000 et 7001 mais rejette l'utilisateur 7002.
+
+Ainsi nous avons deux sécurités à passer afin de pouvoir utiliser le serveur {\kam}. Il faut tout d'abord être dans la base de donnée de {\kam} puis ensuite dans le fichier users de {\frad} en tant qu'utilisateur accepté.
+
+
