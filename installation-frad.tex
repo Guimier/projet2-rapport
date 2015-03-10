@@ -16,14 +16,18 @@ apt-get install radiusclient1
 \subsubsection{Configuration}
 Nous avions fini d'installer {\frad}. Il nous restait donc à le configurer. Ce serveur {\rad} peut être configuré de deux manières différentes : soit à partir des fichiers présents dans \texttt{/etc/freeradius}, soit à partir d'une base de données. Nous avons choisi de configurer à partir des fichiers. Il a donc fallu aller vérifier si la configuration se faisait bien grâce aux fichiers. Pour cela, il a suffi d'aller vérifier dans le fichier \texttt{sites-available/default}.
 
-Il nous a ensuite fallu ajouter des utilisateurs. Pour cela, nous avons ajouté dans le fichier \texttt{users} des lignes dans le format suivant :
 
-\todo[Indiquer la configuration réelle]
+Nous avons dû ensuite modifier le fichier \texttt{/etc/freeradius/users}. Nous avons tout effacé et avons annoncé les utilisateurs autorisés ou non de la manière suivante :
+
 \begin{verbatim}
-login … := Accept
+7000@192.168.102.120 Auth-Type:=Accept
+7001@192.168.102.120 Auth-Type:=Accept
+7003@192.168.102.120 Auth-Type:=Reject
 \end{verbatim}
 
-Cette ligne autorise l'utilisateur \texttt{login} à se connecter, ce qui peut être vérifié avec les commandes suivantes :
+Cela autorise les utilisateurs 7000 et 7001 mais rejette l'utilisateur 7002 dans le domaine 192.168.102.120.
+
+Ainsi nous avons deux sécurités à passer afin de pouvoir utiliser le serveur {\kam}. Il faut tout d'abord être dans la base de donnée de {\kam} puis ensuite dans le fichier users de {\frad} en tant qu'utilisateur accepté. Nous avons pu alors vérifier 
 
 \begin{verbatim}
 service freeradius reload
@@ -67,7 +71,7 @@ Nous avons ensuite été modifier le fichier \texttt{/etc/radiusclient-ng/server
 \end{verbatim}
 
 Ce fichier contient l'adresse des serveurs {\rad} et leurs clefs. Ainsi, nous avons choisi la clef "kamailio".
-
+Nous sommes ensuite aller décommenter "digest" dans le fichier \texttt{/etc/freeradius/sites-available/default}. Il faut le faire dans les sections "authorize" et "authenticate". 
 
 Puis ensuite il a fallu aller modifier le fichier \texttt{/etc/freeradius/clients.conf} qui définit les clients autorisés par le serveur {\frad} :
 
@@ -79,16 +83,44 @@ Client localhost
 }
 \end{verbatim}
 
-
-Nous avons dû ensuite modifier le fichier \texttt{/etc/freeradius/users}. Nous avons tout effacé et avons annoncé les utilisateurs autorisés ou non de la manière suivante :
+Ensuite, nous avons dû modifier le fichier \texttt{/usr/local/kamailio/kamailio.cfg}. Nous avons écrit les lignes permettants de charger les modules nécessaires au bon fonctionnement de {\kam} avec {\frad} :
 
 \begin{verbatim}
-7000@192.168.102.120 Auth-Type=Accept
-7001@192.168.102.120 Auth-Type=Accept
-7003@192.168.102.120 Auth-Type=Reject
+#!PRADIUS
+loadmodule "acc_radius.so"
+loadmodule "auth_radius.so"
+loadmodule "misc_radius.so"
+
+modparam("acc","log_level", 1)
+
+modparam("acc","radius_flag", 1)
+modparam( "acc", "radius_missed_flag", 2 )
+modparam( "acc", "log_flag", 1 )
+modparam( "acc", "log_missed_flag", 1 )
+modparam( "acc", "service_type", 15 )
+modparam( "acc|auth_radius|misc_radius", "radius_config", "/etc/radiusclient-ng/radiusclient.conf" )
+
+modparam( "auth_radius", "service_type", 15 )
+
+modparam( "acc|acc_radius", "radius_extra", "Calling-Station-Id=$fu; Called-Station-Id=$tu" )
+
+#!endif
 \end{verbatim}
 
-Cela autorise les utilisateurs 7000 et 7001 mais rejette l'utilisateur 7002.
+Il a, enfin, fallu ajouter la demande d'authentification radius dans la logique de routage situé dans le même fichier :
 
-Ainsi nous avons deux sécurités à passer afin de pouvoir utiliser le serveur {\kam}. Il faut tout d'abord être dans la base de donnée de {\kam} puis ensuite dans le fichier users de {\frad} en tant qu'utilisateur accepté.
+\begin{verbatim}
+#!ifdef PRADIUS
+        if (is_method("REGISTER"))
+        {
+                if (!radius_www_authorize("$fd"))
+                {
+                        www_challenge("$fd","0");
+                        exit;
+                }
+        }
+#!endif
+\end{verbatim}
+
+
 
