@@ -71,8 +71,6 @@ Nous avons ensuite été modifier le fichier \texttt{/etc/radiusclient-ng/server
 \end{verbatim}
 
 Ce fichier contient l'adresse des serveurs {\rad} et leurs clefs. Ainsi, nous avons choisi la clef "kamailio".
-Nous sommes ensuite aller décommenter "digest" dans le fichier \texttt{/etc/freeradius/sites-available/default}. Il faut le faire dans les sections "authorize" et "authenticate". 
-
 Puis ensuite il a fallu aller modifier le fichier \texttt{/etc/freeradius/clients.conf} qui définit les clients autorisés par le serveur {\frad} :
 
 \begin{verbatim}
@@ -84,7 +82,7 @@ Client localhost
 \end{verbatim}
 
 Ensuite, nous avons dû modifier le fichier \texttt{/usr/local/kamailio/kamailio.cfg}. Nous avons écrit les lignes permettants de charger les modules nécessaires au bon fonctionnement de {\kam} avec {\frad} :
-
+\begin{small}
 \begin{verbatim}
 #!PRADIUS
 loadmodule "acc_radius.so"
@@ -106,6 +104,7 @@ modparam( "acc|acc_radius", "radius_extra", "Calling-Station-Id=$fu; Called-Stat
 
 #!endif
 \end{verbatim}
+\end{small}
 
 Il a, enfin, fallu ajouter la demande d'authentification radius dans la logique de routage situé dans le même fichier :
 
