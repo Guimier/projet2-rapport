@@ -7,6 +7,8 @@
 \usepackage[T1]{fontenc} % ???
 \usepackage[francais]{babel} % Typographie française
 
+\usepackage{cleveref}
+
 % Images
 \usepackage{graphicx}
 
@@ -28,9 +30,19 @@
 \definecolor{coloration_type}{rgb}{0, 0.7, 0}
 \definecolor{coloration_erreurs}{rgb}{0.6, 0.35, 0.8}
 
+% Tabulations verbatim
+% http://www.grappa.univ-lille3.fr/FAQ-LaTeX/6.16.html
+\makeatletter
+{\catcode`\^^I=\active
+\gdef\verbatim{\catcode`\^^I=\active\def^^I{\hspace*{4em}}%
+\@verbatim \frenchspacing\@vobeyspaces \@xverbatim}}
+\makeatother
+
 % Coloration syntaxique
 \usepackage{minted}
-\newminted{shell}{tabsize=4,xleftmargin=1cm}
+\newminted[shellcode]{shell}{tabsize=4,xleftmargin=1cm,fontsize=\footnotesize,frame=leftline}
+% On trouvera probablement difficilement mieux…
+\newminted[kamcf]{ini}{tabsize=4,xleftmargin=1cm,fontsize=\footnotesize,frame=leftline}
 
 %%%%%%%%%% Commandes supplémentaires %%%%%%%%%%%
 
@@ -49,9 +61,11 @@
 %%% Gestion des annexes
 \makeatletter
 	
+	\newcounter{annctr}
+	
 	% Définir une annexe
 	% {#1} Nom de l’annexe
-	\newcommand{\annexe}[1]{\newpage\addcontentsline{ann}{section}{#1}\section*{#1}}
+	\newcommand{\annexe}[1]{\stepcounter{annctr}\addcontentsline{ann}{section}{\protect\numberline {\Alph{annctr}}#1}\section*{\numberline {\Alph{annctr}}#1}}
 	% Lister les annexes
 	% Note : ce serait quand même bien de le faire fonctionner sans avoir besoin du makefile.
 	\newcommand\listeannexes{\sectionSpeciale{Annexes}\input{annexes.tex}}
@@ -65,7 +79,17 @@
 %%%%%%%%%% Abréviations %%%%%%%%%%
 % Le contenu suffit comme documentation…
 
+\newcommand\win{Windows}
+\newcommand\mac{Mac}
+\newcommand\lnx{Linux}
+\newcommand\lnp{Linphone}
+
 \newcommand\my{MySQL}
 \newcommand\kam{Kamailio}
 \newcommand\rad{RADIUS}
 \newcommand\frad{FreeRADIUS}
+\newcommand\apa{Apache}
+\newcommand\pma{phpMyAdmin}
+\newcommand\xlite{X-Lite}
+\newcommand\cph{Cisco phone \todo[(remplacer par la référence)]}
+\newcommand\ata{ATA}

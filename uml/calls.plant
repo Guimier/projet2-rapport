@@ -1,0 +1,81 @@
+interface AccountContext {
+	+ boolean contains( Account )
+	+ string getDescription()
+}
+
+AccountContext - Account : définit un ensemble de >
+
+class Account implements AccountContext {
+	+ {static} Account get( string )
+	+ string getDomain()
+	+ string getName()
+	+ string getId()
+	+ string getShortName( string )
+	' AccountContext
+	+ boolean contains( Account )
+	+ string getDescription()
+}
+
+class AccountDomain implements AccountContext {
+	+ boolean contains( Account )
+	+ string getDescription()
+}
+
+class AccountGroup implements AccountContext {
+	+ boolean contains( Account )
+	+ string getDescription()
+	+ string getId()
+}
+
+class Universe implements AccountContext {
+	+ boolean[true] contains( Account )
+	+ string getDescription()
+}
+
+class Call {
+	+ Account getCaller()
+	+ Account getCallee()
+	+ timestamp getStartTime()
+	+ seconds getStartTime()
+	+ string getStatus( Context )
+}
+
+Call o-- Account : entre deux >
+
+class AbortedCall extends Call {
+}
+
+class EffectiveCall extends Call {
+}
+
+class CallList implements Iterator {
+	+ void add( Call )
+	+ integer getLength()
+	+ seconds getTotalDuration()
+}
+
+CallList - Call : recense >
+
+class FilteredCallList {
+	+ {static} callable filterByContext( AccountContext )
+	+ {static} callable filterByCaller( AccountContext )
+	+ {static} callable filterByCallee( AccountContext )
+	+ FilteredCallList( CallList, callable )
+	+ CallList getFilteredOut()
+}
+
+CallList <|- FilteredCallList
+
+class PriceFilters {
+	+ {static} PriceFilters getForAccount( Account )
+	+ array filterAccount( Account )
+	+ array filterByCallee( CallList )
+}
+
+PriceFilters -- CallList : sépare selon les tarifs >
+
+class RadiusLog {
+	+ CallList getMonthCalls( integer, integer )
+}
+
+RadiusLog - CallList : extrait >

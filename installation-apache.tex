@@ -1,0 +1,12 @@
+\subsection{\apa}
+
+Pour travailler sur l’interface de facturation web en PHP, nous avons installé {\apa} :
+
+\todo[Vérifier le nom du paquet qui contient mod-php]
+\begin{verbatim}
+apt-get install apache2 libapache2-mod-php5
+\end{verbatim}
+
+La configuration par défaut d’{\apa} est suffisante pour notre travail : la racine web est définie comme le répertoire \texttt{/var/www}, dans lequel nous avons ajouté un répertoire \texttt{logs} qui contenait notre code. Nous n’avons pas travaillé directement à la racine afin de pouvoir utiliser {\pma} dans un autre répertoire.
+
+Nous pouvions donc accéder à notre interface web \textit{via} l’adresse \texttt{http://localhost/logs/}.

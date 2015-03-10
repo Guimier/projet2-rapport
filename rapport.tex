@@ -14,8 +14,6 @@
 \input{remerciements.tex}
 \newpage
 
-\renewcommand{\listfigurename}{Table des illustrations}
-\renewcommand{\figurename}{{\sc Illustration}}
 \sectionCachee{\listfigurename}
 \listoffigures
 \newpage
@@ -39,8 +37,20 @@
 \input{introduction.tex}
 \newpage
 
-% Première section : installation de serveurs
+% Première section : organisation du projet
+\input{organisation.tex}
+\newpage
+
+% Seconde section : installation de serveurs
 \input{installation.tex}
+\newpage
+
+% Troisième section : clients SIP
+\input{clients.tex}
+\newpage
+
+% Quatrième section : création de l’interface
+\input{php.tex}
 \newpage
 
 \input{conclusion.tex}
@@ -58,6 +68,7 @@
 
 % Annexes
 \listeannexes
-\todo
+
+\input{diagramme-classes.tex}
 
 \end{document}

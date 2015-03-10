@@ -1,0 +1,94 @@
+\subsection{\frad}
+\subsubsection{Installation}
+
+Nous avons installé {\frad} ainsi que les outils de test associés à partir des paquets disponibles. Pour cela, il a fallu taper la commande :
+
+\begin{verbatim}
+apt-get install freeradius freeradius-utils
+\end{verbatim}
+
+Puis, pour finir, nous avons installé le client {\rad} proposé par {\frad} grâce à la commande suivante :
+
+\begin{verbatim}
+apt-get install radiusclient1
+\end{verbatim}
+
+\subsubsection{Configuration}
+Nous avions fini d'installer {\frad}. Il nous restait donc à le configurer. Ce serveur {\rad} peut être configuré de deux manières différentes : soit à partir des fichiers présents dans \texttt{/etc/freeradius}, soit à partir d'une base de données. Nous avons choisi de configurer à partir des fichiers. Il a donc fallu aller vérifier si la configuration se faisait bien grâce aux fichiers. Pour cela, il a suffi d'aller vérifier dans le fichier \texttt{sites-available/default}.
+
+Il nous a ensuite fallu ajouter des utilisateurs. Pour cela, nous avons ajouté dans le fichier \texttt{users} des lignes dans le format suivant :
+
+\todo[Indiquer la configuration réelle]
+\begin{verbatim}
+login … := Accept
+\end{verbatim}
+
+Cette ligne autorise l'utilisateur \texttt{login} à se connecter, ce qui peut être vérifié avec les commandes suivantes :
+
+\begin{verbatim}
+service freeradius reload
+radtest login password localhost 0 testing123
+\end{verbatim}
+
+La première commande permet de forcer {\frad} à relire ses fichiers de configuration. La second retourne des informations sur sa tentative de connexion au serveur {\frad}, terminant par le status \texttt{Access-Accept} si tout s’est bien déroulé.
+
+Le paramètre \texttt{testing123} est le mot de passe donné par défaut au client localhost dans le fichier \texttt{client.conf}. Nous l'avons ensuite changé en \texttt{kamailio}. Le champ \texttt{password} n’importe pas ici, puisque nous laissons la vérification du mot de passe à {\kam}.
+
+\subsubsection{Intégration de {\rad} à {\kam}}
+
+Pour commencer, il a fallu copier les dictionnaires {\rad} \texttt{dictionary.kamailio} et \texttt{dictionary.sip} dans le répertoire \texttt{/etc/radiusclient-ng} :
+
+\begin{verbatim}
+cp /usr/local/etc/kamailio/dictionary.kamailio /etc/radiusclient-ng
+cp /usr/local/etc/kamailio/dictionary.sip /etc/radiusclient-ng
+\end{verbatim}
+
+Puis, nous les avons inclus dans \texttt{/etc/radiusclient-ng/dictionary} :
+
+\todo[Vérifier syntaxe.]
+\begin{verbatim}
+$INCLUDE dictionary.kamailio
+$INCLUDE dictionary.sip
+\end{verbatim}
+
+Puis il a fallu décommenter les lignes des attributs ou des valeurs \texttt{Failed}, \texttt{Sip-Session} et \texttt{Call-Check} dans les trois fichiers de dictionnaire {\rad}.
+
+Nous avons ensuite dû vérifier que le fichier \texttt{/etc/radiusclient-ng/radiusclient.conf} contient les deux lignes suivantes, qui donnent l'adresse du serveur {\rad} :
+
+\begin{verbatim}
+authserver localhost
+acctserver localhost
+\end{verbatim}
+
+Nous avons ensuite été modifier le fichier \texttt{/etc/radiusclient-ng/servers}. Nous avons annoncé notre serveur de la façon suivante :
+
+\begin{verbatim}
+192.168.102.120		kamailio
+\end{verbatim}
+
+Ce fichier contient l'adresse des serveurs {\rad} et leurs clefs. Ainsi, nous avons choisi la clef "kamailio".
+
+
+Puis ensuite il a fallu aller modifier le fichier \texttt{/etc/freeradius/clients.conf} qui définit les clients autorisés par le serveur {\frad} :
+
+\begin{verbatim}
+Client localhost
+{
+ ipaddress = 192.168.102.120
+ secret = kamailio
+}
+\end{verbatim}
+
+
+Nous avons dû ensuite modifier le fichier \texttt{/etc/freeradius/users}. Nous avons tout effacé et avons annoncé les utilisateurs autorisés ou non de la manière suivante :
+
+\begin{verbatim}
+7000@192.168.102.120 Auth-Type=Accept
+7001@192.168.102.120 Auth-Type=Accept
+7003@192.168.102.120 Auth-Type=Reject
+\end{verbatim}
+
+Cela autorise les utilisateurs 7000 et 7001 mais rejette l'utilisateur 7002.
+
+Ainsi nous avons deux sécurités à passer afin de pouvoir utiliser le serveur {\kam}. Il faut tout d'abord être dans la base de donnée de {\kam} puis ensuite dans le fichier users de {\frad} en tant qu'utilisateur accepté.
+
