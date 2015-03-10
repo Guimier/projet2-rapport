@@ -6,6 +6,8 @@ La première étape de notre projet consistait en l’installation de serveurs d
 
 Conformément à notre cahier des charges, nous y avons installé un proxy SIP, {\kam}, attaché à un serveur d’authentification {\rad}, {\frad}.
 
+Dans la suite, les chemins relatifs indiqués dans les descriptions de la configuration sont relatifs au répertoire principal de configuration du logiciel concerné.
+
 \subsection{\kam}
 
 \subsubsection{Installation}
@@ -26,16 +28,16 @@ Nous avions initialement envisagé d’utiliser ensuite les paquets Debian dispo
 
 Nous avons donc téléchargé et décompressé les sources de {\kam} pour les compiler. Nous avons choisi d’utiliser la dernière version disponible, qui était la version 4.2.2. Pour cela, nous avons utilisé les commandes :
 
-\begin{shellcode}
+\begin{verbatim}
 wget http://www.kamailio.org/pub/kamailio/4.2.2/src/kamailio-4.2.2_src.tar.gz
 tar xvf kamailio-4.2.2_src.tar.gz
-\end{shellcode}
+\end{verbatim}
 
 Puis nous sommes allés dans le dossier ainsi créé, \texttt{kamailio-4.2.2}, et nous avons exécuté :
 
-\begin{shellcode}
+\begin{verbatim}
 make cfg
-\end{shellcode}
+\end{verbatim}
 
 Cette commande construit la configuration par défaut pour la compilation, qu’il a fallu adapter à nos besoins. Conformément aux indications du rapport de l’année dernière, nous avons effectué les modifications suivantes :
 
@@ -46,16 +48,16 @@ Cette commande construit la configuration par défaut pour la compilation, qu’
 
 Nous avons ensuite compilé et installé {\kam} :
 
-\begin{shellcode}
+\begin{verbatim}
 make all
 make install
-\end{shellcode}
+\end{verbatim}
 
-Cette dernière commande installe {\kam} dans \texttt{/usr/local}.
+Sans précision supplémentaire, cette dernière commande installe {\kam} dans \texttt{/usr/local}.
 
 \subsubsection{Configuration}
 
-Nous avons dû ensuite configurer {\kam}. Nous sommes allés dans le dossier \texttt{/usr/local/etc/kamailio}. Il a fallu rajouter les lignes suivantes dans le fichier de configuration \texttt{kamailio.cfg} :
+Nous avons dû ensuite configurer {\kam} dans le répertoire \texttt{/usr/local/etc/kamailio}. Il a fallu rajouter les lignes suivantes dans le fichier de configuration \texttt{kamailio.cfg} :
 
 \begin{kamcf}
 #!define WITH_MYSQL
@@ -64,17 +66,16 @@ Nous avons dû ensuite configurer {\kam}. Nous sommes allés dans le dossier \te
 #!define WITH_NAT
 \end{kamcf}
 
-Nous avons alors créé puis configuré la base de données. Pour la créer, il a fallu d'abord préciser quel système de base de données nous allions utiliser.
-Dans notre cas, c'est mysql. C'est pourquoi il a fallu aller dans le fichier \texttt{/usr/local/etc/kamailio/kamctlrc} afin de décommenter la ligne :
+Nous avons alors créé puis configuré la base de données. Pour la créer, il a fallu d'abord préciser quel système de base de données nous allions utiliser. Dans notre cas, c'est \my. C'est pourquoi il a fallu aller dans le fichier \texttt{kamctlrc} afin de décommenter la ligne :
 
 \begin{kamcf}
 DBENGINE=MYSQL
 \end{kamcf}
 
 Ensuite, nous avons tapé 
-\begin{shellcode}
+\begin{verbatim}
 /usr/local/sbin/kamdbctl create
-\end{shellcode}
+\end{verbatim}
 \todo
 
 \subsection{\frad}
@@ -82,52 +83,57 @@ Ensuite, nous avons tapé
 
 Nous avons installé {\frad} ainsi que les outils de test associés à partir des paquets disponibles. Pour cela, il a fallu taper la commande :
 
-\begin{shellcode}
+\begin{verbatim}
 apt-get install freeradius freeradius-utils
-\end{shellcode}
+\end{verbatim}
 
 Puis, pour finir, nous avons installé le client {\rad} proposé par {\frad} grâce à la commande suivante :
 
-\begin{shellcode}
+\begin{verbatim}
 apt-get install radiusclient1
-\end{shellcode}
+\end{verbatim}
 
 \subsubsection{Configuration}
-Nous avions fini d'installer {\frad}. Il nous restait donc à le configurer. Ce serveur {\rad} peut être configuré de deux manières différentes : soit à partir des fichiers présents dans \texttt{/etc/freeradius}, soit à partir d'une base de données. Nous avons choisi de configurer à partir des fichiers. Il a donc fallu aller vérifier si la configuration se faisait bien grâce aux fichiers. Pour cela, il a suffi d'aller vérifier dans le fichier \texttt{/etc/freeradius/sites-available/default}.
+Nous avions fini d'installer {\frad}. Il nous restait donc à le configurer. Ce serveur {\rad} peut être configuré de deux manières différentes : soit à partir des fichiers présents dans \texttt{/etc/freeradius}, soit à partir d'une base de données. Nous avons choisi de configurer à partir des fichiers. Il a donc fallu aller vérifier si la configuration se faisait bien grâce aux fichiers. Pour cela, il a suffi d'aller vérifier dans le fichier \texttt{sites-available/default}.
 
-Ensuite, nous sommes allés dans le répertoire \texttt{/etc/freeradius} afin de modifier le fichier \texttt{users}. Dans ce fichier, nous avons ajouté des utilisateurs de la façon suivantes :
+Il nous a ensuite fallu ajouter des utilisateurs. Pour cela, nous avons ajouté dans le fichier \texttt{users} des lignes dans le format suivant :
 
-login Cleartext-Password:="password"
+\todo[Indiquer la configuration réelle]
+\begin{verbatim}
+login … := Accept
+\end{verbatim}
 
-Cette ligne autorise l'utilisateur login à se connecter avec le mot de passe "password".
+Cette ligne autorise l'utilisateur \texttt{login} à se connecter, ce qui peut être vérifié avec les commandes suivantes :
 
-Nous avons pû ensuite faire le test en utilisant la commande suivante :
-
-\begin{shellcode}
+\begin{verbatim}
+service freeradius reload
 radtest login password localhost 0 testing123
-\end{shellcode}
+\end{verbatim}
 
-Le paramètre "testing123" est le mot de passe donné par défaut au client localhost dans le fichier \texttt{/etc/freeradius/client.conf}. Nous l'avons ensuite changé en "kamailio".
+La première commande permet de forcer {\frad} à relire ses fichiers de configuration. La second retourne des informations sur sa tentative de connexion au serveur {\frad}, terminant par le status \texttt{Access-Accept} si tout s’est bien déroulé.
+
+Le paramètre \texttt{testing123} est le mot de passe donné par défaut au client localhost dans le fichier \texttt{client.conf}. Nous l'avons ensuite changé en \texttt{kamailio}. Le champ \texttt{password} n’importe pas ici, puisque nous laissons la vérification du mot de passe à {\kam}.
 
 \subsubsection{Intégration de {\rad} à {\kam}}
 
-Pour commencer, il a fallu copier les dictionnaires \texttt{dictionary.kamailio} et \texttt{dictionary.sip} dans le répertoire \texttt{/etc/radiusclient-ng} :
+Pour commencer, il a fallu copier les dictionnaires {\rad} \texttt{dictionary.kamailio} et \texttt{dictionary.sip} dans le répertoire \texttt{/etc/radiusclient-ng} :
 
-\begin{shellcode}
+\begin{verbatim}
 cp /usr/local/etc/kamailio/dictionary.kamailio /etc/radiusclient-ng
 cp /usr/local/etc/kamailio/dictionary.sip /etc/radiusclient-ng
-\end{shellcode}
+\end{verbatim}
 
-Puis, nous avons inclus dans \texttt{/etc/radiusclient-ng/dictionary} les deux fichiers suivants :
+Puis, nous les avons inclus dans \texttt{/etc/radiusclient-ng/dictionary} :
 
-\begin{itemize}
-\item{\texttt{/etc/radiusclient-ng/dictionary.kamailio} ;}
-\item{\texttt{/etc/radiusclient-ng/dictionary.sip}.}
-\end{itemize}
+\todo[Vérifier syntaxe.]
+\begin{verbatim}
+$INCLUDE dictionary.kamailio
+$INCLUDE dictionary.sip
+\end{verbatim}
 
-Puis il a fallu décommenter les lignes des attributs ou des valeurs Failed, Sip-Session et Call-Check dans les trois fichiers dictionary.
+Puis il a fallu décommenter les lignes des attributs ou des valeurs \texttt{Failed}, \texttt{Sip-Session} et \texttt{Call-Check} dans les trois fichiers de dictionnaire {\rad}.
 
-Nous avons ensuite dû vérifier que les deux lignes suivantes,qui donnent l'adresse du serveur {\rad}, se trouvaient bien dans le fichier \texttt{/etc/radiusclient-ng/radiusclient.conf} :
+Nous avons ensuite dû vérifier que le fichier \texttt{/etc/radiusclient-ng/radiusclient.conf} contient les deux lignes suivantes, qui donnent l'adresse du serveur {\rad} :
 
 \begin{verbatim}
 authserver localhost
