@@ -11,9 +11,12 @@
 
 % Images
 \usepackage{graphicx}
+% http://tex.stackexchange.com/questions/101858/make-two-figures-aligned-at-top
+\usepackage[export]{adjustbox}
 
 % Mise en page
 \usepackage[top=2.5cm, bottom=7.5cm, left=2.5cm, right=2.5cm, footskip=4.5cm]{geometry}
+\parskip=8pt
 
 % Outils pour l’écriture
 \usepackage{xcolor} % Utilisé pour les hiddeux \todo
@@ -37,12 +40,6 @@
 \gdef\verbatim{\catcode`\^^I=\active\def^^I{\hspace*{4em}}%
 \@verbatim \frenchspacing\@vobeyspaces \@xverbatim}}
 \makeatother
-
-% Coloration syntaxique
-\usepackage{minted}
-\newminted[shellcode]{shell}{tabsize=4,xleftmargin=1cm,fontsize=\footnotesize,frame=leftline}
-% On trouvera probablement difficilement mieux…
-\newminted[kamcf]{ini}{tabsize=4,xleftmargin=1cm,fontsize=\footnotesize,frame=leftline}
 
 %%%%%%%%%% Commandes supplémentaires %%%%%%%%%%%
 
@@ -91,5 +88,6 @@
 \newcommand\apa{Apache}
 \newcommand\pma{phpMyAdmin}
 \newcommand\xlite{X-Lite}
-\newcommand\cph{Cisco phone \todo[(remplacer par la référence)]}
+\newcommand\cph{Cisco IP phone 7961}
 \newcommand\ata{ATA}
+\newcommand\cata{Cisco ATA 186}
