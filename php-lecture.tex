@@ -35,9 +35,7 @@ Mon Jan 19 10:52:26 2015
 \label{radrecord}
 \end{figure}
 
-\todo[Rappeler ici la ligne de configuration de {\kam} qui permet l’extension.]
-
-Ces fichiers sont constitués d’une liste d’enregistrements correspondant à des actions des utilisateurs, séparés par un double saut de ligne. Chacun de ces enregistrements commence par une date formatée, puis est constitué d’une liste de champs extensible (voir \cref{radrecord}).
+Ces fichiers sont constitués d’une liste d’enregistrements correspondant à des actions des utilisateurs, séparés par un double saut de ligne. Chacun de ces enregistrements commence par une date formatée, puis est constitué d’une liste de champs extensible (voir \cref{radrecord}). Nous avons ajouté pour nos besoins les champs \texttt{Calling-Station-Id} et \texttt{Called-Station-Id} \textit{via} la variable de configuration \texttt{radius\_extra} de {\kam}.
 
 Le champ \texttt{Acct-status-Type} permet de connaître le type d’action qui a provoqué la journalisation. Nous avons rencontré trois valeurs lors de nos essais :
 \begin{description}
@@ -48,11 +46,13 @@ Le champ \texttt{Acct-status-Type} permet de connaître le type d’action qui a
 
 \subsubsection{Interprétation du journal}
 
-Pour simplifier les évolutions éventuelles, nous avons décidé d’effectuer une désérialisation intégrale des données. Bien que moins efficace en mémoire et en temps qu’un algorithme d’extraction optimisé, une désérialisation simmplifie l’adaptation aux modifications de configuration (ajout de champs) et de besoins (nécessité de lire un champ laissé de côté).
+Pour simplifier les évolutions éventuelles, nous avons décidé d’effectuer une désérialisation intégrale des données. Bien que moins efficace en mémoire et en temps qu’un algorithme d’extraction optimisé, une désérialisation simplifie l’adaptation aux modifications de configuration (ajout de champs) et de besoins (nécessité de lire un champ laissé de côté).
 
-La désérialisation est effectuée séparément pour chaque fichier et son résultat est un tableau ordonné des enregistrements, représentés sous forme d’un tableau associatif correpondant directement aux associations clé-valeur du journal produit par {\frad}. La date donnée sur la première ligne d’un enregistrement étant redondante avec le champ \texttt{Timestamp}, elle n’est pas intégrée dans le résultat.
+La désérialisation est effectuée séparément pour chaque fichier et son résultat est un tableau ordonné des enregistrements, représentés sous forme d’un tableau associatif correpondant directement aux associations clé-valeur du journal produit par {\frad}. La date donnée sur la première ligne d’un enregistrement étant redondante avec le champ \texttt{Timestamp}, nous avons choisi de l’ignorer, ce qui évite de compliquer la structure ou d’ajouter un champ spécifique dans le résultat de la désérialisation.
 
 Afin de produire des factures et des listes mensuelles, ces tableaux d’enregistrements sont concaténés avant d’être interprétés.
+
+\newpage
 
 La transformation du journal d’événements en une liste d’appels est effectuée selon l’algorithme suivant :
 \begin{itemize}
@@ -80,4 +80,4 @@ La transformation du journal d’événements en une liste d’appels est effect
 	\item retourner la liste des appels.
 \end{itemize}
 
-Il s’agit d’une seconde version de l’algorithme : la première n’ajoutait pas d’information à propos des appels avortés dans la liste des débuts d’appels, mais nous avons été confronté à un cas où, pour un même appel, deux enregistrements \texttt{Failed} et \texttt{Stop} se suivaient. Nos n’avons pas pu reproduire le cas et ne savons donc pas s’il s’agit d’un cas normal ou dû aux manipulation inhabituelles que nous avons effectuées durant la phase de développement : nous étions effectivement dans une phase où nous avons pusieurs fois de suite redémarré les serveurs pour tenter de régler des problèmes de communications.
+Il s’agit d’une seconde version de l’algorithme : la première n’ajoutait pas d’information à propos des appels avortés dans la liste des débuts d’appels, mais nous avons été confronté à un cas où, pour un même appel, deux enregistrements \texttt{Failed} et \texttt{Stop} se suivaient. Nos n’avons pas pu reproduire le cas et ne savons donc pas s’il s’agit d’un cas normal ou dû aux manipulations inhabituelles que nous avons effectuées durant la phase de développement : nous étions effectivement dans une phase où nous avons pusieurs fois de suite redémarré les serveurs pour tenter de régler des problèmes de communications.
