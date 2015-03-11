@@ -75,6 +75,14 @@
       
 \makeatother
 
+% Hack pour ne pas bloquer la compilation
+\ifdefined\ganttalignnewline\else
+\newcommand\ganttalignnewline{\todo[ligne]}
+\fi
+
+%%%%%%%%%% Abstraction de la mise en forme %%%%%%%%%%
+
+\newcommand\nom[1]{\textsc{#1}}
 \newcommand\classe[1]{\textit{#1}}
 
 %%%%%%%%%% Abréviations %%%%%%%%%%
