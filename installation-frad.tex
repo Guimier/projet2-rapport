@@ -36,11 +36,11 @@ radtest login password localhost 0 testing123
 
 La première commande permet de forcer {\frad} à relire ses fichiers de configuration. La second retourne des informations sur sa tentative de connexion au serveur {\frad}, terminant par le status \texttt{Access-Accept} si tout s’est bien déroulé.
 
-Le paramètre \texttt{testing123} est le mot de passe donné par défaut au client localhost dans le fichier \texttt{client.conf}. Nous l'avons ensuite changé en \texttt{kamailio}. Le champ \texttt{password} n’importe pas ici, puisque nous laissons la vérification du mot de passe à {\kam}.
+Le paramètre \texttt{testing123} est le mot de passe donné par défaut au client localhost dans le fichier \texttt{client.conf}. Nous l'avons par la suite changé par \texttt{kamailio}. Le champ \texttt{password} n’importe pas ici, puisque nous laissons la vérification du mot de passe à {\kam}.
 
 \subsubsection{Intégration de {\rad} à {\kam}}
 
-Pour commencer, il a fallu copier les dictionnaires {\rad} \texttt{dictionary.kamailio} et \texttt{dictionary.sip} dans le répertoire \texttt{/etc/radiusclient-ng} :
+Pour commencer cette partie, il a fallu copier les deux  dictionnaires {\rad} \texttt{dictionary.kamailio} et \texttt{dictionary.sip} dans le répertoire du client {\rad} \texttt{/etc/radiusclient-ng} :
 
 \begin{verbatim}
 cp /usr/local/etc/kamailio/dictionary.kamailio /etc/radiusclient-ng
@@ -57,7 +57,7 @@ $INCLUDE dictionary.sip
 
 Puis il a fallu décommenter les lignes des attributs ou des valeurs \texttt{Failed}, \texttt{Sip-Session} et \texttt{Call-Check} dans les trois fichiers de dictionnaire {\rad}.
 
-Nous avons ensuite dû vérifier que le fichier \texttt{/etc/radiusclient-ng/radiusclient.conf} contient les deux lignes suivantes, qui donnent l'adresse du serveur {\rad} :
+Nous avons ensuite dû vérifier que le fichier de configuration du client {\rad}, \texttt{/etc/radiusclient-ng/radiusclient.conf}, contient les deux lignes suivantes, qui donnent l'adresse du serveur {\rad} :
 
 \begin{verbatim}
 authserver localhost
@@ -70,7 +70,7 @@ Nous avons ensuite été modifier le fichier \texttt{/etc/radiusclient-ng/server
 192.168.102.120		kamailio
 \end{verbatim}
 
-Ce fichier contient l'adresse des serveurs {\rad} et leurs clefs. Ainsi, nous avons choisi la clef "kamailio".
+Ce fichier contient l'adresse des serveurs {\rad} et leurs clefs. Ainsi, nous avons choisi la clef \texttt{kamailio}.
 Puis ensuite il a fallu aller modifier le fichier \texttt{/etc/freeradius/clients.conf} qui définit les clients autorisés par le serveur {\frad} :
 
 \begin{verbatim}

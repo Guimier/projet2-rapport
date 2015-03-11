@@ -1,18 +1,15 @@
+\begin{figure}[!h]
+\begin{center}
 \begin{ganttchart}[y unit title=1.5cm,
-y unit chart=1cm,
+y unit chart=1.5cm,
 vgrid,hgrid, 
 title label anchor/.style={below=-1.6ex},
 title left shift=.05,
 title right shift=-.05,
 title height=1,
 bar/.style={fill=gray!50},
-incomplete/.style={fill=white},
-progress label text={},
 bar height=0.7,
-group right shift=0,
-group top shift=.6,
-group height=.3,
-group peaks width=.2]{0}{23}
+bar label node/.append style={align=right}]{0}{23}
 %labels\\
 \gantttitle{Oct. 2014}{4} 
 \gantttitle{Nov. 2014}{4} 
@@ -22,9 +19,12 @@ group peaks width=.2]{0}{23}
 \gantttitle{Mar. 2015}{4} \\
 %tasks
 \ganttbar{Recherche}{2}{3} \\
-\ganttbar{Montage du premier serveur}{4}{9} \\
-\ganttbar{Montage du second serveur}{11}{19} \\
-\ganttbar{Application de facturation}{11}{17} \\
+\ganttbar{Montage du\ganttalignnewline premier serveur}{4}{9} \\
+\ganttbar{Montage du\ganttalignnewline second serveur}{11}{19} \\
+\ganttbar{Application\ganttalignnewline de facturation}{11}{17} \\
 \ganttbar{Utilisation ATA}{17}{19} \\
-\ganttbar{Écriture du rapport}{16}{21} \\
+\ganttbar{Écriture du\ganttalignnewline rapport}{16}{21} \\
 \end{ganttchart}
+\end{center}
+\caption{Diagramme de GANTT réel}
+\end{figure}

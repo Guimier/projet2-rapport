@@ -1,4 +1,4 @@
-TEXFILES=$(wildcard *.tex)
+TEXFILES=$(shell find -name '*.tex')
 
 rapport.pdf: $(TEXFILES)
 	touch annexes.tex
