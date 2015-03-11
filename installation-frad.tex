@@ -42,10 +42,12 @@ Le paramètre \texttt{testing123} est le mot de passe donné par défaut au clie
 
 Pour commencer cette partie, il a fallu copier les deux  dictionnaires {\rad} \texttt{dictionary.kamailio} et \texttt{dictionary.sip} dans le répertoire du client {\rad} \texttt{/etc/radiusclient-ng} :
 
+\begin{small}
 \begin{verbatim}
 cp /usr/local/etc/kamailio/dictionary.kamailio /etc/radiusclient-ng
 cp /usr/local/etc/kamailio/dictionary.sip /etc/radiusclient-ng
 \end{verbatim}
+\end{small}
 
 Puis, nous les avons inclus dans \texttt{/etc/radiusclient-ng/dictionary} :
 
@@ -82,7 +84,7 @@ Client localhost
 \end{verbatim}
 
 Ensuite, nous avons dû modifier le fichier de configuration de {\kam}, \texttt{/usr/local/kamailio/kamailio.cfg}. Nous avons ajouté les lignes permettants de charger les modules nécessaires au bon fonctionnement de {\kam} avec {\frad} :
-\begin{small}
+
 \begin{verbatim}
 #!PRADIUS
 loadmodule "acc_radius.so"
@@ -96,15 +98,17 @@ modparam( "acc", "radius_missed_flag", 2 )
 modparam( "acc", "log_flag", 1 )
 modparam( "acc", "log_missed_flag", 1 )
 modparam( "acc", "service_type", 15 )
-modparam( "acc|auth_radius|misc_radius", "radius_config", "/etc/radiusclient-ng/radiusclient.conf" )
+modparam( "acc|auth_radius|misc_radius", "radius_config",
+	"/etc/radiusclient-ng/radiusclient.conf" )
 
 modparam( "auth_radius", "service_type", 15 )
 
-modparam( "acc|acc_radius", "radius_extra", "Calling-Station-Id=$fu; Called-Station-Id=$tu" )
+modparam( "acc|acc_radius", "radius_extra",
+	"Calling-Station-Id=$fu; Called-Station-Id=$tu" )
 
 #!endif
 \end{verbatim}
-\end{small}
+
 
 Il a, enfin, fallu ajouter la demande d'authentification radius dans la logique de routage situé dans le même fichier :
 
