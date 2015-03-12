@@ -6,9 +6,9 @@ Dans un premier temps, nous avons vérifié le fonctionnement du système de lec
 
 L’affichage est réalisé grâce à un ensemble de classes héritant de la classe abstraite \classe{Page} (un diagramme recensant ces classes est fourni en annexe), ce qui permet d’uniformiser les comportements en les intégrant à une base commune, stockée dans un fichier \texttt{template.php}.
 
-La construction de l’interface est effectuée en deux étapes, exécutées immédiatement l’une après l’autre dans le fichier \texttt{index.php} : l’object \classe{Page} est instancié ; il stocke les paramètres du constructeur — la configuration et les paramètres de la requête — puis appelle la méthode \texttt{build}, définie par les sous-classes. Cette méthode a pour rôle la récupération des données à afficher. Dans le cas ou l’exécution de cette méthode lève une exception, la page construit un objet \classe{ExceptionPage} qui affichera l’exception.
+La construction de l’interface est effectuée en deux étapes, exécutées immédiatement l’une après l’autre dans le fichier \texttt{index.php} : l’objet \classe{Page} est instancié ; il stocke les paramètres du constructeur — la configuration et les paramètres de la requête — puis appelle la méthode \texttt{build}, dont la définition est laissée aux sous-classes. Cette méthode a pour rôle la récupération des données à afficher. Dans le cas où l’exécution de cette méthode lève une exception, la page construit un objet \classe{ExceptionPage} qui affichera l’exception.
 
-La seconde étape est l’envoi des données à l’utilisateur, qui a lieu lors de l’appel de la méthode \texttt{display}. Celle-ci consiste en l’inclusion du fichier \texttt{template.php} ou, le cas échéant, en la délégation à la méthode \texttt{display} de l’objet \classe{ExceptionPage} créé. Le fichier \texttt{template.php}, une fois inclus, se comporte comme une partie de la méthode \texttt{build} et accède aux deux méthodes abstraite de la classe \classe{Page}, \texttt{getContent} et \texttt{getTitle}, qui retournent respectivement le contenu de la page (chaîne de caractère contenant du HTML partiel sans balise orpheline) et son titre (chaîne de caractères). Ces deux méthodes se contentent d’effectuer le formatage des données acquises précédemment et son supposées ne pas lever d’exception.
+La seconde étape est l’envoi des données à l’utilisateur, qui a lieu lors de l’appel de la méthode \texttt{display}. Celle-ci consiste en l’inclusion du fichier \texttt{template.php} ou, le cas échéant, en la délégation à la méthode \texttt{display} de l’objet \classe{ExceptionPage} créé. Le fichier \texttt{template.php}, une fois inclus, se comporte comme une partie de la méthode \texttt{build} et accède aux deux méthodes abstraite de la classe \classe{Page}, \texttt{getContent} et \texttt{getTitle}, qui retournent respectivement le contenu de la page (chaîne de caractère contenant du HTML partiel sans balise orpheline) et son titre (chaîne de caractères). Ces deux méthodes se contentent d’effectuer le formatage des données acquises précédemment et sont supposées ne pas lever d’exception.
 
 La construction de la page dans un fichier unique \texttt{template.php} et l’utilisation des méthodes statiques de la classe \classe{Page} permettent une uniformisation aisée des pages et une modification rapide.
 
@@ -16,7 +16,7 @@ La construction de la page dans un fichier unique \texttt{template.php} et l’u
 
 \subsubsection{Contextes}
 
-Pour filtrer les listes d’appels, nous avons défini la notion de contexte. Un contexte est une collection par définition de comptes sur des serveurs quelconques. Les classes représentant un contexte implémente l’interface \classe{Context}, qui définit une méthode \texttt{contains} permettant de déterminer si un compte respecte la définition reconnaissant les éléments du contexte. Cette structure ne permet pas d’extraire une liste de tous les comptes du contexte, mais a l’avantage de pouvoir représenter un contexte inconnu, par exemple un serveur distant.
+Pour filtrer les listes d’appels, nous avons défini la notion de contexte. Un contexte est une collection de comptes sur des serveurs quelconques, construite par description. Les classes représentant un contexte implémente l’interface \classe{Context}, qui définit une méthode \texttt{contains} permettant de déterminer si un compte respecte la définition du contexte. Cette structure ne permet pas d’extraire une liste de tous les comptes du contexte, mais a l’avantage de pouvoir représenter un contexte inconnu, par exemple un serveur distant.
 
 Nous avons eu besoin de quatre contextes :
 \begin{itemize}
@@ -28,7 +28,7 @@ Nous avons eu besoin de quatre contextes :
 
 \subsubsection{Affichage du journal}
 
-Pour l’affichage des journaux, nous avons créé une classe abstraite \classe{LogPage}, descendante de \classe{Page}, récupère une liste d’appels \classe{CallList} et la formate pour l’affichage. La récupération de la liste d’appels est implémentée \textit{via} une méthode \texttt{prepareLog} qui gère la sélection de la période, mais délègue le filtrage des appels aux sous-classes \textit{via} un \classe{Contexte}.
+Pour l’affichage des journaux, nous avons créé une classe abstraite \classe{LogPage}, descendante de \classe{Page}, qui récupère une liste d’appels \classe{CallList} et la formate pour l’affichage. La récupération de la liste d’appels est implémentée \textit{via} une méthode \texttt{prepareLog} qui gère la sélection de la période, mais délègue le filtrage des appels aux sous-classes \textit{via} un \classe{Contexte}.
 
 Nous avons créé trois types de pages affichant le journal : une page affichant l’intégralité des journaux du serveur, une affichant la partie des appels concernant un groupe passé dans les paramètres et une affichant la liste des appels correspondant à un compte passé dans les paramètres.
 
@@ -46,9 +46,9 @@ Suite à une demande de M. \nom{Laurençot}, nous avons dû ajouter à ce journa
 
 \subsubsection{Affichage des factures}
 
-La génération et l’affichage des factures sont gérés par une classe abstraite \classe{InvoicePage}, qui requiert la définition d’un contexte et d’une liste de filtres tarifaires par les sous-classes. Cette classe filtre tout d’abord le journal complet grâce au contexte, puis le sépare en un ensemble de listes d’appels partiels grâce à la liste de filtres tarifaires, avant de mettre en forme la facture.
+La génération et l’affichage des factures sont gérés par une classe abstraite \classe{InvoicePage}, qui requiert la définition, par les sous-classes d’un contexte, et d’une liste de filtres tarifaires. Cette classe filtre tout d’abord le journal complet grâce au contexte, puis le sépare en un ensemble de listes d’appels partielles grâce à la liste de filtres tarifaires, avant de mettre en forme la facture.
 
-Les filtres tarifaires peuvent être configurés à deux niveaux (un exemple de fichier de configuration est disponible en annexe) : pour tous les comptes du serveur, \textit{via} le tableau de configuration globale \texttt{prices}, et pour chaque groupe, \textit{via} un tableau similaire dans la définition du groupe. Ces tableaux sont des listes de couple associant un contexte à un tarif horaire. Les contextes peuvent être définis sous forme d’une chaîn de caractères : la chaîne contenant l’unique caractère « \texttt{*} » représente le contexte universel, les chaînes commençant par un « \texttt{@} » représente un domaine et les autres chaînes représentent un groupe.
+Les filtres tarifaires peuvent être configurés à deux niveaux (un exemple de fichier de configuration est disponible en annexe) : pour tous les comptes du serveur, \textit{via} le tableau de configuration globale \texttt{prices}, et pour chaque groupe, \textit{via} un tableau similaire dans la définition du groupe. Ces tableaux sont des listes de couple associant un contexte à un tarif horaire. Les contextes peuvent être définis sous forme d’une chaîne de caractères : la chaîne contenant l’unique caractère « \texttt{*} » représente le contexte universel, les chaînes commençant par un « \texttt{@} » représente un domaine et les autres chaînes représentent un groupe.
 
 \begin{figure}[H]
 \begin{center}

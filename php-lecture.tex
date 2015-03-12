@@ -2,13 +2,13 @@
 
 \subsubsection{Accès au journal}
 
-Le fichiers constituant le journal que crée {\frad} sont situés dans le dossier \texttt{/var/log/freeradius/radacct/127.0.0.1}. Un fichier est créé chaque jour d’activité, son nom étant de la forme \texttt{detail-aaaammjj} où \texttt{a}, \texttt{m} et \texttt{j} représentent les chiffres de l’année, du mois et du jour du mois.
+Les fichiers constituant le journal que crée {\frad} sont situés dans le dossier \texttt{/var/log/freeradius/radacct/127.0.0.1}. Un fichier est créé pour chaque jour d’activité, son nom étant de la forme \texttt{detail-aaaammjj} où \texttt{a}, \texttt{m} et \texttt{j} représentent les chiffres de l’année, du mois et du jour du mois.
 
 Lors de l’installation, tous ces fichiers sont accessibles uniquement à \texttt{root}. Nous avons dans un premier temps modifié le groupe des répertoires pour permettre au démon HTTP d’accéder aux fichiers et nous avons configuré le dernier répertoire en mode \texttt{setgid} afin que les nouveaux fichiers héritent du bon groupe.
 
 Cependant cette configuration n’a pas été suffisante, car {\frad} créer les fichiers avec des droits de lecture uniquement pour l’utilisateur propriétaire. Afin de nous concentrer sur le cœur du projet, nous nous sommes contentés d’une solution simple, consistant à ajouter un job dans la \texttt{crontab} donnant régulièrement les droits au démon HTTP sur les fichiers nouvellement créés.
 
-Pour notre confort pendant le travail, nous avons choisi une fréquence relativement élevée, mais une fréquence nettement plus faible — le premier du mois par exemple — serait suffisante sur un serveur en production et représente un charge négligeable pour le système. Cependant il aurait pu être intéressant de configurer ce comportement directement dans {\frad} ou de l’intégrer dans un script de déplacement des fichiers (permettant leur classement et donc une meilleure lisibilité, le répertoire pouvant se remplir vite avec un fichier par jour).
+Pour notre confort pendant le travail, nous avons choisi une fréquence relativement élevée, mais une fréquence nettement plus faible — le premier du mois par exemple — serait suffisante sur un serveur en production et représente une charge négligeable pour le système. Cependant il aurait pu être intéressant de configurer ce comportement directement dans {\frad} ou de l’intégrer dans un script de déplacement des fichiers (permettant leur classement et donc une meilleure lisibilité, le répertoire pouvant se remplir vite avec un fichier par jour).
 
 \subsubsection{Format du journal}
 
@@ -40,7 +40,7 @@ Ces fichiers sont constitués d’une liste d’enregistrements correspondant à
 Le champ \texttt{Acct-status-Type} permet de connaître le type d’action qui a provoqué la journalisation. Nous avons rencontré trois valeurs lors de nos essais :
 \begin{description}
 	\item[\texttt{Start}] Début d’un appel, a lieu lorsque l’appelé décroche.
-	\item[\texttt{Stop}] Fin d’un appel, a lieu lorsque l’une des deux personnes communicant raccroche.
+	\item[\texttt{Stop}] Fin d’un appel, a lieu lorsque l’une des deux personnes en communication raccroche.
 	\item[\texttt{Failed}] Appel avorté, a lieu lorsque l’appelant abandonne ou lorsque l’appelé décline l’appel.
 \end{description}
 
@@ -77,5 +77,7 @@ La transformation du journal d’événements en une liste d’appels est effect
 	\item s’il reste des débuts d’appels non avortés, lever une exception ;
 	\item retourner la liste des appels.
 \end{itemize}
+
+\vspace{1em}
 
 Il s’agit d’une seconde version de l’algorithme : la première n’ajoutait pas d’information à propos des appels avortés dans la liste des débuts d’appels, mais nous avons été confronté à un cas où, pour un même appel, deux enregistrements \texttt{Failed} et \texttt{Stop} se suivaient. Nos n’avons pas pu reproduire le cas et ne savons donc pas s’il s’agit d’un cas normal ou dû aux manipulations inhabituelles que nous avons effectuées durant la phase de développement : nous étions effectivement dans une phase où nous avons pusieurs fois de suite redémarré les serveurs pour tenter de régler des problèmes de communications.
