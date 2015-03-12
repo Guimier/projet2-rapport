@@ -9,11 +9,10 @@ Afin de tester le bon fonctionnement des serveurs et de remplir les journaux, no
 \includegraphics[width=7cm]{images/config-xlite.png}
 \end{center}
 \caption{Panneau de configuration de Xlite}
+\label{confxlite}
 \end{figure}
 
-Suite à la rapide présentation qui nous en avait été faite en cours de téléphonie, nous avons commencé par utiliser {\xlite}. {\xlite} est un client SIP logiciel développé par la société CounterPath. Il est disponible pour {\win} et {\mac}. Le fait qu’il ne soit plus disponible pour {\lnx} nous a amenés à peu l’utiliser, afin de simplifier notre organisation.
-
-\todo[Expliquer brièvement la configuration]
+Suite à la rapide présentation qui nous en avait été faite en cours de téléphonie, nous avons commencé par utiliser {\xlite}. {\xlite} est un client SIP logiciel développé par la société CounterPath. Il est disponible pour {\win} et {\mac}. Le fait qu’il ne soit plus disponible pour {\lnx} nous a amenés à peu l’utiliser, afin de simplifier notre organisation. Vous pouvez, néanmoins, voir la fenêtre de configuration de Xlite à la \cref{confxlite}. 
 
 \subsection{\lnp}
 
@@ -22,15 +21,13 @@ Suite à la rapide présentation qui nous en avait été faite en cours de tél�
 \includegraphics[width=12cm]{images/config-linphone.png}
 \end{center}
 \caption{Panneau de configuration de Linphone}
+\label{conflinphone}
 \end{figure}
 
 Nous avons donc recherché un client logiciel disponible pour {\lnx} ; après avoir testé plusieurs logiciels non fonctionnels à cause d’erreurs de compilation, dues à des incompatibilité avec des bibliothèques trop récentes, et d’erreurs de segmentation à l’exécution, nous avons trouvé {\lnp}, qui fonctionne bien et qui a l’avantage d’être disponible dans les dépôts de la plupart des distributions {\lnx}.
-
-\todo[Étoffer un peu la description ?]
+Vous pouvez voir, sur la \cref{conflinphone}, la fenêtre de configuration de ce softphone. En premier lieu, vous devez configurer l'identité de votre softphone comportant son numéro et son domaine. S'ensuit alors la configuration de l'adresse IP du proxy SIP. On peut aussi configurer le protocole de la couche transport que l'on souhaite utiliser mais nous avons laissé le protocole UDP qui était par défaut.  
 
 {\lnp} est un logiciel \textit{open source} disponible pour les principaux systèmes d’exploitation, aussi bien bureau que mobile.
-
-\todo[Expliquer brièvement la configuration]
 
 \subsection{\cph}
 
@@ -42,9 +39,8 @@ Nous avons donc recherché un client logiciel disponible pour {\lnx} ; après av
 \end{figure}
 
 Le {\cph} est un téléphone fonctionnant en VoIP vendu par Cisco. Nous avons tenté d'utiliser un {\cph} dans le cadre de notre projet. Pour cela, il a fallu installer un serveur TFTP afin de permettre au téléphone de trouver sa configuration.
-Nous avons néanmoins rapidement rencontré des problèmes avec cette configuration.
-C'est pourquoi nous avons décidé d'utiliser plutôt un {\ata}. 
-\todo[Problème des mots de passe]
+Nous avons néanmoins rapidement rencontré des problèmes avec cette configuration puisque la documentation semblée ne pas vouloir s'offrir à nous.
+C'est pourquoi nous avons décidé d'utiliser plutôt un {\ata}.
 
 \subsection{\cata}
 
@@ -55,6 +51,4 @@ C'est pourquoi nous avons décidé d'utiliser plutôt un {\ata}.
 \caption{\ata}
 \end{figure}
 
-Un {\ata} (Analog Telephone Adaptor) est un adaptateur combiné à Ethernet permettant de faire fonctionner un téléphone analogique en VoIP.
-
-\todo[Description de la configuration ; problème de la résolution de nom]
+Un {\ata} (Analog Telephone Adaptor) est un adaptateur combiné à Ethernet permettant de faire fonctionner un téléphone analogique en VoIP. Nous en avons donc utilisé afin de pouvoir téléphoner sur notre serveur avec des téléphones analogiques. Nous ne sommes malheureusement pas parvenu à configurer l'{\ata} pour qu'il puisse lire les noms de domaine, d'où le fait que nous n'avons travaillé qu'avec les adresses IP.
