@@ -27,7 +27,7 @@ Nous avons dû ensuite modifier le fichier \texttt{/etc/freeradius/users}. Nous 
 
 Cela autorise les utilisateurs 7000 et 7001 mais rejette l'utilisateur 7002 dans le domaine 192.168.102.120.
 
-Ainsi nous avons deux sécurités à passer afin de pouvoir utiliser le serveur {\kam}. Il faut tout d'abord être dans la base de donnée de {\kam} puis ensuite dans le fichier users de {\frad} en tant qu'utilisateur accepté. Nous avons pu alors vérifier 
+Ainsi nous avons deux sécurités à passer afin de pouvoir utiliser le serveur {\kam}. Il faut tout d'abord être dans la base de donnée de {\kam} puis ensuite dans le fichier users de {\frad} en tant qu'utilisateur accepté. Nous avons pu alors vérifier :
 
 \begin{verbatim}
 service freeradius reload
@@ -108,6 +108,8 @@ modparam( "acc|acc_radius", "radius_extra",
 #!endif
 \end{verbatim}
 
+\label{extension}
+Le paramètre \texttt{radius\_extra} permet d’ajouter des champs dans les enregistrement du journal de {\frad} [3]. Nous y ajoutons ici les identifiants des deux terminiaux communicant [2].
 
 Il a, enfin, fallu ajouter la demande d'authentification radius dans la logique de routage situé dans le même fichier :
 
