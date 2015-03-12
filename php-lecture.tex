@@ -35,7 +35,7 @@ Mon Jan 19 10:52:26 2015
 \label{radrecord}
 \end{figure}
 
-Ces fichiers sont constitués d’une liste d’enregistrements correspondant à des actions des utilisateurs, séparés par un double saut de ligne. Chacun de ces enregistrements commence par une date formatée, puis est constitué d’une liste de champs extensible (voir \cref{radrecord}). Nous avons ajouté pour nos besoins les champs \texttt{Calling-Station-Id} et \texttt{Called-Station-Id} \textit{via} la variable de configuration \texttt{radius\_extra} de {\kam}.
+Ces fichiers sont constitués d’une liste d’enregistrements correspondant à des actions des utilisateurs, séparés par un double saut de ligne. Chacun de ces enregistrements commence par une date formatée, puis est constitué d’une liste de champs extensible (voir \cref{radrecord}). Nous avons ajouté pour nos besoins les champs \texttt{Calling-Station-Id} et \texttt{Called-Station-Id} \textit{via} la variable de configuration \texttt{radius\_extra} de {\kam} (voir \cref{extension}).
 
 Le champ \texttt{Acct-status-Type} permet de connaître le type d’action qui a provoqué la journalisation. Nous avons rencontré trois valeurs lors de nos essais :
 \begin{description}
@@ -51,8 +51,6 @@ Pour simplifier les évolutions éventuelles, nous avons décidé d’effectuer 
 La désérialisation est effectuée séparément pour chaque fichier et son résultat est un tableau ordonné des enregistrements, représentés sous forme d’un tableau associatif correpondant directement aux associations clé-valeur du journal produit par {\frad}. La date donnée sur la première ligne d’un enregistrement étant redondante avec le champ \texttt{Timestamp}, nous avons choisi de l’ignorer, ce qui évite de compliquer la structure ou d’ajouter un champ spécifique dans le résultat de la désérialisation.
 
 Afin de produire des factures et des listes mensuelles, ces tableaux d’enregistrements sont concaténés avant d’être interprétés.
-
-\newpage
 
 La transformation du journal d’événements en une liste d’appels est effectuée selon l’algorithme suivant :
 \begin{itemize}
