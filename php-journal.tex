@@ -28,6 +28,8 @@ Nous avons eu besoin de quatre contextes :
 
 Pour l’affichage des journaux, nous avons créé une classe abstraite \classe{LogPage}, descendante de \classe{Page}, récupère une liste d’appels \classe{CallList} et la formate pour l’affichage. La récupération de la liste d’appels est implémentée \textit{via} une méthode \texttt{prepareLog} qui gère la sélection de la période, mais délègue le filtrage des appels aux sous-classes \textit{via} un \classe{Contexte}.
 
+Nous avons créé trois types de pages affichant le journal : une page affichant l’intégralité des journaux du serveur, une affichant la partie des appels concernant un groupe passé dans les paramètres et une affichant la liste des appels correspondant à un compte passé dans les paramètres.
+
 \begin{figure}
 \begin{center}
 \includegraphics[width=10cm]{images/journal-global.png}
@@ -40,6 +42,12 @@ Suite à une demande de M. \nom{Laurençot}, nous avons dû ajouter à ce journa
 
 \subsubsection{Affichage des factures}
 
+La génération et l’affichage des factures sont gérés par une classe abstraite \classe{InvoicePage}, qui requiert la définition d’un contexte et d’une liste de filtres tarifaires par les sous-classes. Cette classe filtre tout d’abord le journal complet grâce au contexte, puis le sépare en un ensemble de listes d’appels partiels grâce à la liste de filtres tarifaires, avant de mettre en forme la facture.
+
+Les filtres tarifaires peuvent être configurés à deux niveaux (un exemple de fichier de configuration est disponible en annexe) : pour tous les comptes du serveur, \textit{via} le tableau de configuration globale \texttt{prices}, et pour chaque groupe, \textit{via} un tableau similaire dans la définition du groupe. Ces tableaux sont des listes de couple associant un contexte à un tarif horaire. Les contextes peuvent être définis sous forme d’une chaîn de caractères : la chaîne contenant l’unique caractères \texttt{*} représente le contexte universel, les chaînes commençant par un \texttt{@} représente un domaine et les autres chaînes représentent un groupe.
+
+Lors de la constitution de la facture, si un appel ne correspond à aucune règle du groupe concerné, les règles globales sont appliquées. Si l’appel ne correspond pas non plus à une règle globale, une exception est levée. Un serveur ouvert à n’importe quel domaine devrait donc toujours avoir une règle finale avec le contexte universel. 
+
 \begin{figure}
 \begin{center}
 \includegraphics[width=10cm]{images/facture.png}
@@ -47,4 +55,5 @@ Suite à une demande de M. \nom{Laurençot}, nous avons dû ajouter à ce journa
 \label{imgfacture}
 \caption{Rendu d’une facture}
 \end{figure}
+
 
