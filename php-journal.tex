@@ -12,6 +12,8 @@ La seconde étape est l’envoi des données à l’utilisateur, qui a lieu lors
 
 La construction de la page dans un fichier unique \texttt{template.php} et l’utilisation des méthodes statiques de la classe \classe{Page} permettent une uniformisation aisée des pages et une modification rapide.
 
+\newpage
+
 \subsubsection{Contextes}
 
 Pour filtrer les listes d’appels, nous avons défini la notion de contexte. Un contexte est une collection par définition de comptes sur des serveurs quelconques. Les classes représentant un contexte implémente l’interface \classe{Context}, qui définit une méthode \texttt{contains} permettant de déterminer si un compte respecte la définition reconnaissant les éléments du contexte. Cette structure ne permet pas d’extraire une liste de tous les comptes du contexte, mais a l’avantage de pouvoir représenter un contexte inconnu, par exemple un serveur distant.
@@ -30,7 +32,7 @@ Pour l’affichage des journaux, nous avons créé une classe abstraite \classe{
 
 Nous avons créé trois types de pages affichant le journal : une page affichant l’intégralité des journaux du serveur, une affichant la partie des appels concernant un groupe passé dans les paramètres et une affichant la liste des appels correspondant à un compte passé dans les paramètres.
 
-\begin{figure}
+\begin{figure}[H]
 \begin{center}
 \includegraphics[width=10cm]{images/journal-global.png}
 \end{center}
@@ -40,20 +42,22 @@ Nous avons créé trois types de pages affichant le journal : une page affichant
 
 Suite à une demande de M. \nom{Laurençot}, nous avons dû ajouter à ce journal une indication des prix pour chaque appel (voir \cref{imgjournal}). Cela nous a incité à créer une classe dédiée à la gestion des prix, \classe{PriceFilters}, car les prix étaient alors gérés directement par la classe \classe{InvoicePage}.
 
+\newpage
+
 \subsubsection{Affichage des factures}
 
 La génération et l’affichage des factures sont gérés par une classe abstraite \classe{InvoicePage}, qui requiert la définition d’un contexte et d’une liste de filtres tarifaires par les sous-classes. Cette classe filtre tout d’abord le journal complet grâce au contexte, puis le sépare en un ensemble de listes d’appels partiels grâce à la liste de filtres tarifaires, avant de mettre en forme la facture.
 
-Les filtres tarifaires peuvent être configurés à deux niveaux (un exemple de fichier de configuration est disponible en annexe) : pour tous les comptes du serveur, \textit{via} le tableau de configuration globale \texttt{prices}, et pour chaque groupe, \textit{via} un tableau similaire dans la définition du groupe. Ces tableaux sont des listes de couple associant un contexte à un tarif horaire. Les contextes peuvent être définis sous forme d’une chaîn de caractères : la chaîne contenant l’unique caractères \texttt{*} représente le contexte universel, les chaînes commençant par un \texttt{@} représente un domaine et les autres chaînes représentent un groupe.
+Les filtres tarifaires peuvent être configurés à deux niveaux (un exemple de fichier de configuration est disponible en annexe) : pour tous les comptes du serveur, \textit{via} le tableau de configuration globale \texttt{prices}, et pour chaque groupe, \textit{via} un tableau similaire dans la définition du groupe. Ces tableaux sont des listes de couple associant un contexte à un tarif horaire. Les contextes peuvent être définis sous forme d’une chaîn de caractères : la chaîne contenant l’unique caractère « \texttt{*} » représente le contexte universel, les chaînes commençant par un « \texttt{@} » représente un domaine et les autres chaînes représentent un groupe.
 
-Lors de la constitution de la facture, si un appel ne correspond à aucune règle du groupe concerné, les règles globales sont appliquées. Si l’appel ne correspond pas non plus à une règle globale, une exception est levée. Un serveur ouvert à n’importe quel domaine devrait donc toujours avoir une règle finale avec le contexte universel. 
-
-\begin{figure}
+\begin{figure}[H]
 \begin{center}
 \includegraphics[width=10cm]{images/facture.png}
 \end{center}
 \label{imgfacture}
 \caption{Rendu d’une facture}
 \end{figure}
+
+Lors de la constitution de la facture, si un appel ne correspond à aucune règle du groupe concerné, les règles globales sont appliquées. Si l’appel ne correspond pas non plus à une règle globale, une exception est levée. Un serveur ouvert à n’importe quel domaine devrait donc toujours avoir une règle finale avec le contexte universel. 
 
 

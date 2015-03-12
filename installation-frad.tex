@@ -17,7 +17,7 @@ apt-get install radiusclient1
 Nous avions fini d'installer {\frad}. Il nous restait donc à le configurer. Ce serveur {\rad} peut être configuré de deux manières différentes : soit à partir des fichiers présents dans \texttt{/etc/freeradius}, soit à partir d'une base de données. Nous avons choisi de configurer à partir des fichiers. Il a donc fallu aller vérifier si la configuration se faisait bien grâce aux fichiers. Pour cela, il a suffi d'aller vérifier dans le fichier \texttt{sites-available/default}.
 
 
-Nous avons dû ensuite modifier le fichier \texttt{/etc/freeradius/users}. Nous avons tout effacé et avons annoncé les utilisateurs autorisés ou non de la manière suivante :
+Nous avons dû ensuite modifier le fichier \texttt{users}. Nous avons tout effacé et avons annoncé les utilisateurs autorisés ou non de la manière suivante :
 
 \begin{verbatim}
 7000@192.168.102.120 Auth-Type:=Accept
@@ -27,7 +27,9 @@ Nous avons dû ensuite modifier le fichier \texttt{/etc/freeradius/users}. Nous 
 
 Cela autorise les utilisateurs 7000 et 7001 mais rejette l'utilisateur 7002 dans le domaine 192.168.102.120.
 
-Ainsi nous avons deux sécurités à passer afin de pouvoir utiliser le serveur {\kam}. Il faut tout d'abord être dans la base de donnée de {\kam} puis ensuite dans le fichier users de {\frad} en tant qu'utilisateur accepté. Nous avons pu alors vérifier :
+\newpage
+
+Ainsi nous avons deux sécurités à passer afin de pouvoir utiliser le serveur {\kam}. Il faut tout d'abord être dans la base de donnée de {\kam} puis ensuite dans le fichier \texttt{users} de {\frad} en tant qu'utilisateur accepté. Nous avons pu alors vérifier :
 
 \begin{verbatim}
 service freeradius reload
@@ -40,7 +42,7 @@ Le paramètre \texttt{testing123} est le mot de passe donné par défaut au clie
 
 \subsubsection{Intégration de {\rad} à {\kam}}
 
-Pour commencer cette partie, il a fallu copier les deux  dictionnaires {\rad} \texttt{dictionary.kamailio} et \texttt{dictionary.sip} dans le répertoire du client {\rad} \texttt{/etc/radiusclient-ng} :
+Pour commencer cette partie, il a fallu copier deux dictionnaires {\rad}, qui décrivent comment les parties doivent communiquer, dans le répertoire du client {\rad} :
 
 \begin{small}
 \begin{verbatim}
@@ -58,21 +60,23 @@ $INCLUDE dictionary.sip
 
 Puis il a fallu décommenter les lignes des attributs ou des valeurs \texttt{Failed}, \texttt{Sip-Session} et \texttt{Call-Check} dans les trois fichiers de dictionnaire {\rad}.
 
-Nous avons ensuite dû vérifier que le fichier de configuration du client {\rad}, \texttt{/etc/radiusclient-ng/radiusclient.conf}, contient les deux lignes suivantes, qui donnent l'adresse du serveur {\rad} :
+\newpage
+
+Nous avons ensuite dû vérifier que le fichier de configuration du client {\rad}, \texttt{/etc/radiusclient-ng/radiusclient.conf}, contient les deux lignes suivantes, donnant l'adresse du serveur {\rad} :
 
 \begin{verbatim}
 authserver localhost
 acctserver localhost
 \end{verbatim}
 
-Puis, dans le but d'annoncer notre serveur, nous avons dû modifier le fichier \texttt{/etc/radiusclient-ng/servers} en rajoutant la ligne suivante :
+Puis, dans le but d'annoncer notre serveur, nous avons dû modifier le fichier \texttt{servers} du même répertoire en rajoutant la ligne suivante :
 
 \begin{verbatim}
 192.168.102.120		kamailio
 \end{verbatim}
 
 Ce fichier contient l'adresse des serveurs {\rad} et leurs clefs. Ainsi, nous avons choisi la clef \texttt{kamailio}.
-Puis ensuite il a fallu aller modifier le fichier \texttt{/etc/freeradius/clients.conf} qui définit les clients autorisés par le serveur {\frad} :
+Puis ensuite il a fallu aller modifier le fichier \texttt{clients.conf} de la configuration de \frad~qui définit les clients autorisés par le serveur {\frad} :
 
 \begin{verbatim}
 Client localhost
@@ -82,7 +86,7 @@ Client localhost
 }
 \end{verbatim}
 
-Ensuite, nous avons dû modifier le fichier de configuration de {\kam}, \texttt{/usr/local/kamailio/kamailio.cfg}. Nous avons ajouté les lignes permettants de charger les modules nécessaires au bon fonctionnement de {\kam} avec {\frad} :
+Ensuite, nous avons dû modifier le fichier \texttt{kamailio.cfg} de configuration de {\kam}. Nous avons ajouté les lignes permettants de charger les modules nécessaires au bon fonctionnement de {\kam} avec {\frad} :
 
 \begin{verbatim}
 #!PRADIUS
@@ -109,7 +113,7 @@ modparam( "acc|acc_radius", "radius_extra",
 \end{verbatim}
 
 \label{extension}
-Le paramètre \texttt{radius\_extra} permet d’ajouter des champs dans les enregistrement du journal de {\frad} [3]. Nous y ajoutons ici les identifiants des deux terminiaux communicant [2].
+Le paramètre \texttt{radius\_extra} permet d’ajouter des champs dans les enregistrement du journal de {\frad} [3]. Nous y ajoutons ici les identifiants des deux terminaux communicant [2].
 
 Il a, enfin, fallu ajouter la demande d'authentification radius dans la logique de routage situé dans le même fichier :
 
