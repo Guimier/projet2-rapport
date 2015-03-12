@@ -13,8 +13,10 @@ Nous avons travaillé parallèlement sur deux machines configurées de façons l
 
 Durant le temps de montage du premier serveur, notre travail s’est progressivement organisé et ce manque d’organisation initiale, conjointement avec les difficultés que nous avons rencontrées pour faire communiquer {\kam} et {\frad}, ont causé un manque de notes structurées permettant de monter efficacement le second serveur.
 
-C’est pour cette raison que nous avons ensuite fortement séparé les tâches : Damien s’est concentré sur l’installation du second serveur, afin de disposer d’une procédure d’installation propre, et\todo[, au par delà de cela,] Lucien s’est occupé de la configuration des clients matériels et de l’écriture de l’interface de facturation. Cette séparation n’a pas été stricte et nous avons pu à de nombreuses occasions nous aider sur les points difficiles.
+
+C’est pour cette raison que nous avons ensuite exécuté des tâches en parallèle : Damien s’est concentré sur l’installation du second serveur, afin de disposer d’une procédure d’installation propre, et Lucien s’est occupé de la configuration des clients matériels et de l’écriture de l’interface de facturation. Cette séparation n’a pas été stricte et nous avons pu à de nombreuses occasions nous aider sur les points difficiles.
 L'écriture du rapport a quelque peu pris du retard étant donné que nous ne l'avons commencée qu'au début du mois de Février. Cela est dû aux problèmes que nous avons rencontrés pour monter le second serveur et pour utiliser l'{\ata}.
+
 
 \subsection{Écriture de l’interface de facturation}
 
@@ -22,7 +24,7 @@ Le cahier des charges de notre projet nous imposait de travailler en PHP. Nous a
 \begin{itemize}
 	\item notre serveur, qui dispose de la dernière version dans les paquets de la distributions que nous avons utilisée, la 5.4.36 ;
 	\item le serveur web de l’ISIMA, \texttt{fc.isima.fr}, qui dispose d’une ancienne version qui n’est plus supportée mais encore appréciée pour sa stabilité, la 5.3.3 ;
-	\item l’ordinateur de Lucien, qui dispose de la version 5.5.9 \todo{regarder le numéro de patch}.
+	\item l’ordinateur de Lucien, qui dispose de la version 5.5.9.
 \end{itemize}
 
 Afin de pouvoir travailler simultanément sur le code, nous avons utilisé le gestionnaire de versions Git, avec un dépôt commun sur Github, disponible à l’adresse
