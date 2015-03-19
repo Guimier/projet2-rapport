@@ -86,10 +86,9 @@ Client localhost
 }
 \end{verbatim}
 
-Ensuite, nous avons dû modifier le fichier \texttt{kamailio.cfg} de configuration de {\kam}. Nous avons ajouté les lignes permettants de charger les modules nécessaires au bon fonctionnement de {\kam} avec {\frad} :
+Ensuite, nous avons dû modifier le fichier \texttt{kamailio.cfg} de configuration de {\kam}. Nous avons ajouté les lignes permettants de charger les modules nécessaires au bon fonctionnement de {\kam} avec {\frad}, après les lignes chargeant les autres modules :
 
 \begin{verbatim}
-#!PRADIUS
 loadmodule "acc_radius.so"
 loadmodule "auth_radius.so"
 loadmodule "misc_radius.so"
@@ -108,17 +107,14 @@ modparam( "auth_radius", "service_type", 15 )
 
 modparam( "acc|acc_radius", "radius_extra",
 	"Calling-Station-Id=$fu; Called-Station-Id=$tu" )
-
-#!endif
 \end{verbatim}
 
 \label{extension}
 Le paramètre \texttt{radius\_extra} permet d’ajouter des champs dans les enregistrement du journal de {\frad} [3]. Nous y ajoutons ici les identifiants des deux terminaux communicant [2].
 
-Enfin, il a fallu ajouter la demande d'authentification radius dans la logique de routage situé dans le même fichier :
+Enfin, il a fallu ajouter la demande d'authentification radius dans la logique de routage situé dans le même fichier, entre les accolades introduites par \verb#route[AUTH]# :
 
 \begin{verbatim}
-#!ifdef PRADIUS
         if (is_method("REGISTER"))
         {
                 if (!radius_www_authorize("$fd"))
@@ -127,7 +123,6 @@ Enfin, il a fallu ajouter la demande d'authentification radius dans la logique d
                         exit;
                 }
         }
-#!endif
 \end{verbatim}
 
 
